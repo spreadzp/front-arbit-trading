@@ -1,7 +1,8 @@
 {
-  "name": "nest-angular",
+  "name": "server-bots",
   "version": "1.0.0",
-  "description": "",
+  "description": "central-server",
+  "author": "spread2009@gmail.com",
   "main": "webpack.config.js",
   "scripts": {
     "ng": "ng",
@@ -12,6 +13,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:server": "rimraf ./bin && webpack --progress --colors",
+    "start1": "ts-node --experimental-worker -r tsconfig-paths/register  server/main.ts",
     "build": "npm run build:universal && npm run build:server",
     "watch:server": "rimraf ./bin && webpack --w --colors",
     "watch:client": "ng serve --proxy-config proxy.conf.json",
@@ -21,12 +23,7 @@
     "type": "git",
     "url": "git+https://github.com/bojidaryovchev/nest-angular.git"
   },
-  "author": "bojidaryovchev",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bojidaryovchev/nest-angular/issues"
-  },
-  "homepage": "https://github.com/bojidaryovchev/nest-angular#readme",
   "devDependencies": {
     "@angular-devkit/build-angular": "0.6.1",
     "@angular/cli": "6.0.1",
@@ -41,7 +38,7 @@
     "@types/jasminewd2": "2.0.3",
     "@types/joi": "13.0.5",
     "@types/jsonwebtoken": "7.2.5",
-    "@types/mongoose": "4.7.32",
+    "@types/mongoose": "^4.7.32",
     "@types/node": "9.3.0",
     "@types/passport": "0.4.2",
     "@types/passport-jwt": "3.0.1",
@@ -89,11 +86,14 @@
     "@nestjs/core": "5.0.1",
     "@nestjs/graphql": "2.0.0",
     "@nestjs/microservices": "5.0.1",
+    "@nestjs/mongoose": "^5.0.0",
     "@nestjs/passport": "1.1.0",
     "@nestjs/testing": "5.0.1",
     "@nestjs/websockets": "5.0.1",
     "@nguniversal/express-engine": "6.0.0",
     "@nguniversal/module-map-ngfactory-loader": "6.0.0",
+    "@types/dotenv": "^4.0.3",
+    "angular2-uuid": "^1.1.1",
     "angular4-material-table": "^0.6.7",
     "angular5-csv": "^0.2.10",
     "apollo-angular": "1.1.0",
@@ -106,6 +106,7 @@
     "bootstrap": "3.3.7",
     "cookie-parser": "1.4.3",
     "core-js": "2.5.4",
+    "dotenv": "^6.0.0",
     "express": "4.16.2",
     "font-awesome": "^4.7.0",
     "glob": "7.1.2",
@@ -117,8 +118,9 @@
     "helmet": "3.11.0",
     "joi": "13.1.2",
     "jsonwebtoken": "8.1.1",
-    "mongoose": "4.13.9",
+    "mongoose": "^5.2.3",
     "ng2-datepicker": "^3.1.0",
+    "node-emoji": "^1.8.1",
     "passport": "0.4.0",
     "passport-facebook-token": "3.3.0",
     "passport-google-plus-token": "2.1.0",
@@ -131,6 +133,7 @@
     "rxjs": "6.1.0",
     "rxjs-compat": "6.1.0",
     "subscriptions-transport-ws": "0.9.9",
+    "toa-net": "^1.5.4",
     "ws": "5.1.1",
     "zone.js": "0.8.26"
   }

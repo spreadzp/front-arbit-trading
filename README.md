@@ -17,12 +17,7 @@ A fullstack JavaScript project, using technologies from the modern stack, such a
 
 These instructions should be sufficient for one to get the project going on their local machine
 
-### Cloning the github repository
 
-To clone the project, run
-```
-git clone https://github.com/bojidaryovchev/nest-angular.git
-```
 
 ### Installing the dependencies
 

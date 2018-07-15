@@ -31,7 +31,8 @@ import {HttpClientModule} from '@angular/common/http';
 import { NgDatepickerModule } from 'ng2-datepicker';
 import { OrderComponent } from './components/order/order.component';
 import { SettingComponent } from './components/setting/setting.component';
-import { MatFormFieldModule } from '@angular/material';
+import { MatFormFieldModule, MatNativeDateModule } from '@angular/material';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
@@ -69,6 +70,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     HttpClientModule,
     NgDatepickerModule,
     MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   bootstrap: [AppComponent]
 })
