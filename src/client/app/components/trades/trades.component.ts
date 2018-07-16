@@ -26,12 +26,25 @@ export class TradesComponent implements OnInit {
         this.items = data;
       });
   }
-  async download(startDate: string, endDate: string) {
-    console.log(startDate, endDate);
-    if (startDate && endDate) {
-      const utcStartDate = Date.parse(startDate);
-      const utcEndDate = Date.parse(endDate);
-      await this.userService.getData<Trade[]>(`trades/find/?startDate=${startDate}&endDate=${endDate}`)
+
+  public onStartDate(event: any): void {
+    this.startDate = new Date(event).valueOf();
+    console.log('this.startDate :', this.startDate );
+  }
+
+  public onEndDate(event: any): void {
+    this.endDate = new Date(event).valueOf();
+    console.log('this.endDate :', this.endDate);
+  }
+
+  async download() {
+    console.log(this.startDate, this.endDate);
+    if (this.startDate && this.endDate) {
+
+      const utcStartDate = Date.parse(this.startDate);
+      const utcEndDate = Date.parse(this.endDate);
+      console.log(utcStartDate, utcEndDate);
+      await this.userService.getData<Trade[]>(`trades/find/?startDate=${utcStartDate}&endDate=${utcEndDate}`)
       .subscribe(data => {
         this.items = data;
       });
