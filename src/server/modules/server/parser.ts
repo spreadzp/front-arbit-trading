@@ -34,6 +34,7 @@ export class Parser {
         } else {
             if (responseForexResource.responseContent !== undefined) {
                 const prices = responseForexResource.responseContent.body;
+                console.log('prices :', prices);
                 fiatPrices = this.forexLoader.fiatParser(prices);
             }
         }

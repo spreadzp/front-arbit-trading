@@ -28,8 +28,8 @@ Get https://mainnet.gateway.proximax.io/node/info
 Get https://dev.gateway.proximax.io/node/info
 
 Get http://localhost:3000/orders/all
-Get http://localhost:3000/orders/find/?startDate=1530738000000&endDate=1530738010001
-Get http://localhost:3000/trades/find/?startDate=1531147708186&endDate=1531147708207
+Get http://localhost:3000/orders/find/?startDate=1530738000000&endDate=1531474565317
+Get http://localhost:3000/trades/find/?startDate=1531147708186&endDate=1531474565317
 Get http://localhost:3000/trades/all
 POST http://localhost:3000/orderBooks/create HTTP/1.1
 content-type: application/json
@@ -54,5 +54,5 @@ content-type: application/json
     "fee": 0.2,
     "arbitrageId": "euifuihfio",
     "deviationPrice": 0.05, 
-    "time": "1530738000001"
+    "time": "1531474565317"
 }
