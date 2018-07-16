@@ -1,0 +1,21 @@
+<div class="panel">
+    <div class="form-inline">
+        <div class="form-group">
+            <div class="col-md-8">
+                <ng-datepicker [(ngModel)]="startData" > 
+                  </ng-datepicker> 
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <ng-datepicker [(ngModel)]="endData">
+                  </ng-datepicker> 
+            </div>
+        </div> 
+         
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <button class="btn btn-default" (click)="download(startData,endData)">Save csv</button>
+            </div>
+        </div>
+    </div>

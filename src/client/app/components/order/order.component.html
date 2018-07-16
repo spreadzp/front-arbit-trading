@@ -1,0 +1,51 @@
+<div class="panel">
+  <div class="form-inline">
+    <div class="form-group">
+      <div class="col-md-8">
+        <ng-datepicker [(ngModel)]="startData">
+        </ng-datepicker>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-6">
+        <ng-datepicker [(ngModel)]="endData">
+        </ng-datepicker>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-8">
+        <button class="btn btn-default" (click)="download(startData,endData)">Save csv</button>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>time</th>
+          <th>exchange</th>
+          <th>pair</th>
+          <th>price</th>
+          <th>volume</th>
+          <th>type order</th>
+          <th>id order</th>
+          <th>fee</th>
+          <th>deviation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td>{{order.time | date: 'mediumTime'}}</td>
+          <td>{{order.exchange}}</td>
+          <td>{{order.pair}}</td>
+          <td>{{order.price}}</td>
+          <td>{{order.volume}}</td>
+          <td>{{order.typeOrder}}</td>
+          <td>{{order.arbitrageId}}</td>
+          <td>{{order.fee}}</td>
+          <td>{{order.deviationPrice}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
