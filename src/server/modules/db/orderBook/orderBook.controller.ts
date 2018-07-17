@@ -22,7 +22,6 @@ export class OrderBookController {
   @Get('order-books/')
   async getOrderBookByPeriod(@Request() req: any): Promise<OrderBook[]> {
     const orderBooks = await this.orderBooksService.getOrderBookByPeriod(req.query.startDate, req.query.endDate);
-    console.log('orderBooks :', orderBooks);
     return orderBooks;
   }
 

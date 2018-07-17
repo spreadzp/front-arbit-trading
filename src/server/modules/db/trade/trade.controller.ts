@@ -27,7 +27,7 @@ export class TradeController {
 
     @Post('save')
     async saveNew(@Body() data: Trade) {
-        const tradeBooks = await this.tradesService.addNewData(data);
+        const trade = await this.tradesService.addNewData(data);
     }
 
     @Get('**')

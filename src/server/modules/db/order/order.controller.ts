@@ -28,7 +28,7 @@ export class OrderController {
 
   @Post('save')
   async saveNew(@Body() data: Order) {
-    const orderBooks = await this.ordersService.addNewData(data);
+    const order = await this.ordersService.addNewData(data);
   }
 
   @Get('**')

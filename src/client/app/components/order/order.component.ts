@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { MatDatepicker } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from './../../services/user.service';
 import { Order } from './../../shared/models/order';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
@@ -9,8 +10,10 @@ import { Angular5Csv } from 'angular5-csv/Angular5-csv';
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
-  startData: string;
-  endData: string;
+  @ViewChild(MatDatepicker) startPicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepicker) endPicker: MatDatepicker<Date>;
+  startDate: any;
+  endDate: any;
   angular5Csv: Angular5Csv;
   orders: Order[];
 
@@ -27,14 +30,25 @@ export class OrderComponent implements OnInit {
       });
   }
 
-  async download(startDate: string, endDate: string) {
-    if (startDate && endDate) {
-      const utcStartDate = Date.parse(startDate);
-      const utcEndDate = Date.parse(endDate);
+  public onStartDate(event: any): void {
+    this.startDate = new Date(event).valueOf();
+    console.log('this.startDate :', this.startDate);
+  }
+
+  public onEndDate(event: any): void {
+    this.endDate = new Date(event).valueOf();
+    console.log('this.endDate :', this.endDate);
+  }
+
+  async download() {
+    console.log(this.startDate, this.endDate);
+    if (this.startDate && this.endDate) {
+      const utcStartDate = Date.parse(this.startDate);
+      const utcEndDate = Date.parse(this.endDate);
       await this.userService.getData<Order[]>(`orders/find/?startDate=${utcStartDate}&endDate=${utcEndDate}`)
         .subscribe(data => {
           this.orders = data;
-          this.createCsv(this.orders, startDate, endDate);
+          this.createCsv(this.orders, this.startDate, this.endDate);
         });
     } else {
       alert('Введите даты поискового диапазона!');
@@ -42,6 +56,8 @@ export class OrderComponent implements OnInit {
   }
 
   createCsv(orderData: Order[], startDate: string, endDate: string) {
+    const chuckSize = 40000;
+    let lengthSting = 0;
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -51,6 +67,15 @@ export class OrderComponent implements OnInit {
       headers: ['exchangeName', 'pair', 'price', 'volume',
         'typeOrder', 'fee', 'arbitrageId', 'deviationPrice', 'time']
     };
-    this.angular5Csv = new Angular5Csv(orderData, `Orders_${startDate}_${endDate}`, options);
+    let chunkArray: any[];
+    if (orderData.length > chuckSize) {
+      chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: Order) => orderData.splice(0, chuckSize));
+      for (const iterator of chunkArray) {
+        lengthSting += iterator.length;
+        this.angular5Csv = new Angular5Csv(iterator, `Orders_${startDate}_${endDate}_length${lengthSting}`, options);
+      }
+    } else {
+      this.angular5Csv = new Angular5Csv(orderData, `Orders_${startDate}_${endDate}`, options);
+    }
   }
 }

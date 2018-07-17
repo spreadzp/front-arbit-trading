@@ -6,7 +6,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --prod",
+    "start": "ng serve",
     "build:client": "ng build --prod --base-href=/dist/browser",
     "build:universal": "ng build --prod && ng run nest-angular:server",
     "test": "ng test",

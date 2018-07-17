@@ -1,50 +1,50 @@
 <div class="panel">
-        <div class="form-inline">
+  <div class="form-inline">
     <mat-form-field color="accent">
-        <mat-label>Inherited calendar color</mat-label>
-        <input matInput [matDatepicker]="startPicker"  placeholder="Choose a date" [(ngModel)]="startDate">
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker [(ngModel)]="startDate" ngDefaultControl (selectedChanged)="onStartDate($event)"></mat-datepicker>
-    </mat-form-field> 
+      <mat-label>Inherited calendar color</mat-label>
+      <input matInput [matDatepicker]="startPicker" placeholder="Choose a date" [(ngModel)]="startDate">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker [(ngModel)]="startDate" ngDefaultControl (selectedChanged)="onStartDate($event)"></mat-datepicker>
+    </mat-form-field>
 
     <mat-form-field color="accent">
-        <mat-label>Custom calendar color</mat-label>
-        <input matInput [matDatepicker]="endPicker" placeholder="Choose a date" [(ngModel)]="endDate" >
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker color="primary" [(ngModel)]="endDate" ngDefaultControl (selectedChanged)="onEndDate($event)"></mat-datepicker>
+      <mat-label>Custom calendar color</mat-label>
+      <input matInput [matDatepicker]="endPicker" placeholder="Choose a date" [(ngModel)]="endDate">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker color="primary" [(ngModel)]="endDate" ngDefaultControl (selectedChanged)="onEndDate($event)"></mat-datepicker>
     </mat-form-field>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-8">
-            <button class="btn btn-default" (click)="download()">Save csv</button>
-        </div>
+      <div class="col-md-offset-2 col-md-8">
+        <button class="btn btn-default" (click)="download()">Save csv</button>
+      </div>
     </div>
-    </div>
+  </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>time</th>
-                <th>exchange</th>
-                <th>pair</th>
-                <th>price</th>
-                <th>volume</th>
-                <th>type order</th>
-                <th>id order</th>
-                <th>id exchange order</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of items">
-                <td>{{item.time | date: 'mediumTime'}}</td>
-                <td>{{item.exchange}}</td>
-                <td>{{item.pair}}</td>
-                <td>{{item.price}}</td>
-                <td>{{item.volume}}</td>
-                <td>{{item.typeOrder}}</td>
-                <td>{{item.idOrder}}</td>
-                <td>{{item.exchOrderId}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>time</th>
+        <th>exchange</th>
+        <th>pair</th>
+        <th>price</th>
+        <th>volume</th>
+        <th>type order</th>
+        <th>id order</th>
+        <th>id exchange order</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{item.time | date: 'mediumTime'}}</td>
+        <td>{{item.exchange}}</td>
+        <td>{{item.pair}}</td>
+        <td>{{item.price}}</td>
+        <td>{{item.volume}}</td>
+        <td>{{item.typeOrder}}</td>
+        <td>{{item.idOrder}}</td>
+        <td>{{item.exchOrderId}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

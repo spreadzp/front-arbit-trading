@@ -1,6 +1,7 @@
+import { MatDatepicker } from '@angular/material';
 import { UserService } from './../../services/user.service';
 import { OrderBook } from './../../shared/models/orderBook.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import { DatepickerOptions } from 'ng2-datepicker';
 import * as frLocale from 'date-fns/locale/fr';
@@ -10,9 +11,11 @@ import * as frLocale from 'date-fns/locale/fr';
   templateUrl: './export.component.html',
   styleUrls: ['./export.component.scss']
 })
-export class ExportComponent implements OnInit {
-  startData: string;
-  endData: string;
+export class ExportComponent implements OnInit { 
+  @ViewChild(MatDatepicker) startPicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepicker) endPicker: MatDatepicker<Date>;
+  startDate: any;
+  endDate: any;
   angular5Csv: Angular5Csv;
   items: OrderBook[];
 
@@ -20,14 +23,25 @@ export class ExportComponent implements OnInit {
 
   ngOnInit() { }
 
-  async download(startDate: string, endDate: string) {
-    if (startDate && endDate) {
-      const utcStartDate = Date.parse(startDate);
-      const utcEndDate = Date.parse(endDate);
+  public onStartDate(event: any): void {
+    this.startDate = new Date(event).valueOf();
+    console.log('this.startDate :', this.startDate );
+  }
+
+  public onEndDate(event: any): void {
+    this.endDate = new Date(event).valueOf();
+    console.log('this.endDate :', this.endDate);
+  }
+
+  async download() {
+    console.log(this.startDate, this.endDate);
+    if (this.startDate && this.endDate) {
+      const utcStartDate = Date.parse(this.startDate);
+      const utcEndDate = Date.parse(this.endDate);
       await this.userService.getData<OrderBook[]>(`orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}`)
         .subscribe(data => {
           this.items = data;
-          this.createCsv(this.items, startDate, endDate);
+          this.createCsv(this.items, this.startDate, this.endDate);
         });
     } else {
       alert('Введите даты поискового диапазона!');

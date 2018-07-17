@@ -1,21 +1,23 @@
 <div class="panel">
-    <div class="form-inline">
-        <div class="form-group">
-            <div class="col-md-8">
-                <ng-datepicker [(ngModel)]="startData" > 
-                  </ng-datepicker> 
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-6">
-                <ng-datepicker [(ngModel)]="endData">
-                  </ng-datepicker> 
-            </div>
-        </div> 
-         
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
-                <button class="btn btn-default" (click)="download(startData,endData)">Save csv</button>
-            </div>
-        </div>
+  <div class="form-inline">
+    <mat-form-field color="accent">
+      <mat-label>Inherited calendar color</mat-label>
+      <input matInput [matDatepicker]="startPicker" placeholder="Choose a date" [(ngModel)]="startDate">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker [(ngModel)]="startDate" ngDefaultControl (selectedChanged)="onStartDate($event)"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field color="accent">
+      <mat-label>Custom calendar color</mat-label>
+      <input matInput [matDatepicker]="endPicker" placeholder="Choose a date" [(ngModel)]="endDate">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker color="primary" [(ngModel)]="endDate" ngDefaultControl (selectedChanged)="onEndDate($event)"></mat-datepicker>
+    </mat-form-field>
+
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-8">
+        <button class="btn btn-default" (click)="download()">Save csv</button>
+      </div>
     </div>
+  </div>
+</div>
