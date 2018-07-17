@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:client": "ng build --prod --base-href=/dist/browser",
+    "build:client": "ng build --prod",
     "build:universal": "ng build --prod && ng run nest-angular:server",
     "test": "ng test",
     "lint": "ng lint",
