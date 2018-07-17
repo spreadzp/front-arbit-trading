@@ -24,6 +24,7 @@ These instructions should be sufficient for one to get the project going on thei
 To install the dependencies after you've cloned the project, go to its root folder and run
 ```
 npm install
+cp sample-env.env .env
 ```
 
 ### Building the Angular application
