@@ -8,6 +8,7 @@ google-chrome --remote-debugging-port=9222
 
 Get http://localhost:3000/orderBooks/all
 Get http://104.236.46.56:3000/sever-tcp/start-server
+Get http://104.236.46.56:3000:3000/sever-tcp/stop-server
 Get http://localhost:3000/sever-tcp/start-server
 Get http://localhost:3000/sever-tcp/stop-server
 
