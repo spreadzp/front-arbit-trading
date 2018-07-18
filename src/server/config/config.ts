@@ -30,7 +30,7 @@ const jwtSecret = extractKey(`${rootPath}/keys/jwt.private.key`);
 const Config: IConfig = {
   development: {
     rootPath,
-    db: 'mongodb://104.236.46.56:27017/orders-book',
+    db: 'mongodb://localhost:27017/orders-book',
     httpPort: 3000,
     tcpPort: 8000,
     wsPort: 1338,
