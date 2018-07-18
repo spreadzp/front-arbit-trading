@@ -4,30 +4,5 @@
     class="btn btn-danger pull-right btn-small"
     (click)="onRemoveGroup()">Remove</button>
     <hr>
-    <div class="panel">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>pair</th>
-            <th>exchange</th>
-            <th>member</th>
-            <th>server</th>
-            <th>volume</th>
-            <th>fee</th>
-            <th>deviation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td>
-            <td>{{ group.idGroup }}</td> 
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <app-edit-group></app-edit-group>    
 </a>
