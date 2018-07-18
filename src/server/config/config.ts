@@ -30,12 +30,12 @@ const jwtSecret = extractKey(`${rootPath}/keys/jwt.private.key`);
 const Config: IConfig = {
   development: {
     rootPath,
-    db: 'mongodb://localhost:27017/orders-book',
+    db: 'mongodb://104.236.46.56:27017/orders-book',
     httpPort: 3000,
     tcpPort: 8000,
     wsPort: 1338,
     jwtSecret,
-    domain: 'localhost',
+    domain: '104.236.46.56',
     httpProtocol: 'http',
     wsProtocol: 'ws',
     forexApiKey: 'bfBuXo30skEAA0ES4Wz3lNQksUjcTuce',
