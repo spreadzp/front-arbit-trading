@@ -6,10 +6,11 @@ import { ShoppingListService } from './shopping-list.service';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { ApiService } from './api.service';
+import { ArbitrageService } from './arbitrage.service';
 
 @NgModule({
   imports: [HttpClientModule],
   providers: [AuthService, RecipesService, ShoppingListService,
-  UserService, ApiService, PersonValidatorService]
+  UserService, ApiService, PersonValidatorService, ArbitrageService]
 })
 export class ServicesModule {}

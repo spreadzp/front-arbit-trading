@@ -63,7 +63,6 @@ export class ServerTcpBot {
             return (signature: string) => auth.verify(signature);
         };
     }
-
     private requestBalanceArbitId(trade: Trade) {
         const oppositeArbitOrder = this.parser.getOppositeOrder(trade.idOrder, trade.typeOrder);
         if (oppositeArbitOrder) {
@@ -76,12 +75,10 @@ export class ServerTcpBot {
 
         /// return this.getCurrentBalanceArbitOrder(trade);
     }
-
     stopTcpServer() {
         this.server.close();
         console.log('Tcp server stoped');
     }
-
     createClient(clientSocket: any) {
         const newClientTcp = new net.Client();
         this.clientsTcp.push({ socket: clientSocket, client: newClientTcp });
@@ -91,7 +88,6 @@ export class ServerTcpBot {
         newClientTcp.connect(clientSocket);
         return newClientTcp;
     }
-
     sendOrdersToBot(orders: Order[]) {
         if (orders.length) {
             for (const currentOrder of orders) {
@@ -108,7 +104,6 @@ export class ServerTcpBot {
             }
         }
     }
-
     startClient(order: any) {
         try {
             if (order.host && order.serverPort) {
@@ -139,7 +134,6 @@ export class ServerTcpBot {
             }
         }
     }
-
     getCurrentPrice(): ExchangeData[] {
         return this.parser.getCurrentPrice();
     }

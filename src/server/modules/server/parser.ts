@@ -83,7 +83,9 @@ export class Parser {
                     exchange: exchangePair[0],
                     pair: exchangePair[1],
                     bids: bidsNewOrder,
+                    bidVolumes: orderBook.bids[0][1],
                     asks: asksNewOrder,
+                    askVolumes: orderBook.asks[0][1],
                     currentStatus: 4,
                     status: true,
                     spread: 0,
@@ -94,21 +96,23 @@ export class Parser {
             ];
         }
         if (bidsNewOrder && asksNewOrder) {
-            for (let i = 0; i < this.exchangeData.length; i++) {
-                if (this.exchangeData[i].exchange === exchangePair[0]
-                    && this.exchangeData[i].pair === exchangePair[1]
+            for (const data of this.exchangeData) {
+                if (data.exchange === exchangePair[0]
+                    && data.pair === exchangePair[1]
                     && orderBook.bids !== undefined && orderBook.asks !== undefined) {
-                    this.exchangeData[i].pair = exchangePair[1];
-                    this.exchangeData[i].bids = bidsNewOrder;
-                    this.exchangeData[i].asks = asksNewOrder;
-                    this.exchangeData[i].currentStatus = 4;
-                    this.exchangeData[i].host = hostNewOrder;
-                    this.exchangeData[i].port = portNewOrder;
-                    this.exchangeData[i].time = Date.now().toString(),
+                    data.pair = exchangePair[1];
+                    data.bids = bidsNewOrder;
+                    data.bidVolumes = orderBook.bids[0][1];
+                    data.asks = asksNewOrder;
+                    data.askVolumes = orderBook.asks[0][1];
+                    data.currentStatus = 4;
+                    data.host = hostNewOrder;
+                    data.port = portNewOrder;
+                    data.time = Date.now().toString(),
                         createdExchangeField = true;
                 }
                 else {
-                    this.exchangeData[i].currentStatus -= 1;
+                    data.currentStatus -= 1;
                 }
             }
         }
@@ -126,7 +130,9 @@ export class Parser {
                     exchange: exchangePair[0],
                     pair: exchangePair[1],
                     bids: bidsNewOrder,
+                    bidVolumes: orderBook.bids[0][1],
                     asks: asksNewOrder,
+                    askVolumes: orderBook.asks[0][1],
                     currentStatus: 4,
                     spread: 0,
                     host: hostNewOrder,
@@ -178,9 +184,9 @@ export class Parser {
         }
         return trade;
     }
-    filterExchangesWithNotFullfiledOrders(connectedExchangesData: ExchangeData[]) {
+    /* filterExchangesWithNotFullfiledOrders(connectedExchangesData: ExchangeData[]) {
 
-    }
+    } */
     setStatusTrade(order: Order) {
         let newOrderFlag = true;
         if (this.stateTrading.length) {
@@ -243,7 +249,8 @@ export class Parser {
                 if (iterator.bids !== 0 && iterator.asks !== 0) {
                     const newOrderBookData: any = {
                         exchangeName: iterator.exchange, pair: iterator.pair,
-                        bid: iterator.bids, ask: iterator.asks, time: Date.now(),
+                        bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,
+                         askVolume: iterator.askVolumes, time: Date.now(),
                     };
                     this.orderBooksService.addNewData(newOrderBookData);
                 }
@@ -256,7 +263,7 @@ export class Parser {
     fetchOrderBook(): ExchangeData[] {
         return this.exchangeData.map(data => ({
             exchange: data.exchange, pair: data.pair,
-            bids: data.bids[0][0], asks: data.asks[0][0], time: Date.now().toString(),
+            bids: data.bids[0][0], bidVolumes: data.bids[0][1], asks: data.asks[0][0], askVolumes: data.asks[0][1], time: Date.now().toString(),
             currentStatus: data.currentStatus, host: data.host, port: data.port, status: true,
             spread: 0,
         }));
@@ -279,8 +286,8 @@ export class Parser {
     }
     getCurrentPrice(): ExchangeData[] {
         return this.exchangeData.map(data => ({
-            exchange: data.exchange, pair: data.pair, bids: data.bids[0][0], asks: data.asks[0][0],
-            spread: ((data.asks[0][0] / data.bids[0][0]) - 1) * 100, currentStatus: data.currentStatus,
+            exchange: data.exchange, pair: data.pair, bids: data.bids[0][0], bidVolumes: data.bids[0][1], asks: data.asks[0][0],
+            askVolumes: data.asks[0][1], spread: ((data.asks[0][0] / data.bids[0][0]) - 1) * 100, currentStatus: data.currentStatus,
             status: data.currentStatus > 0, host: data.host, port: data.port, time: Date.now().toString(),
         }));
     }

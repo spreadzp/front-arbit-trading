@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-10">
+    <app-arbitrage-edit></app-arbitrage-edit>
+    <hr>
+    <ul class="list-group">
+      <app-group-arbitrage
+        *ngFor="let group of groups; let i = index;"
+        [group]="group"
+        (groupRemoved)="arbitrageService.removeMemberArbitrage(i)"
+      ></app-group-arbitrage>
+    </ul>
+  </div>
+</div>

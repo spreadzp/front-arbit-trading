@@ -34,6 +34,8 @@ import { SettingComponent } from './components/setting/setting.component';
 import { MatFormFieldModule, MatNativeDateModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ArbitrageComponent } from './components/arbitrage/arbitrage.component';
+import { ArbitrageEditComponent } from './components/arbitrage/arbitrage-edit/arbitrage-edit.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -52,6 +54,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     ExportComponent,
     OrderComponent,
     SettingComponent,
+    ArbitrageComponent,
+    ArbitrageEditComponent,
   ],
   imports: [
     AppRoutingModule,

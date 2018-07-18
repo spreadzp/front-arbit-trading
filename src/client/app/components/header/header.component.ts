@@ -20,12 +20,12 @@ export class HeaderComponent implements OnInit {
     root: {title: 'General server', link: 'recipes'},
     sections: [
       {title: 'Settings', link: 'recipes'},
-      {title: 'Markets', link: 'shopping-list'},
-      {title: 'User', link: 'user'},
+      {title: 'Markets', link: 'user'},
       {title: 'Trades', link: 'trades'},
       {title: 'Export', link: 'export'},
       {title: 'Order', link: 'order'},
-      {title: 'Setting', link: 'setting'}
+      {title: 'Setting', link: 'setting'},
+      {title: 'Arbitrage', link: 'arbitrage'}
     ]
   };
 
