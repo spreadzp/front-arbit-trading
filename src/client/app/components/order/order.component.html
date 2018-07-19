@@ -34,23 +34,21 @@
           <th>fee</th>
           <th>volume</th>
           <th>type order</th>
-          <td>{{deviation Price}}</td>
-          <th>id order</th>
+          <td>deviation Price</td> 
           <th>id exchange order</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of items">
-          <td>{{item.time | date: 'mediumTime'}}</td>
-          <td>{{item.exchange}}</td>
-          <td>{{item.pair}}</td>
-          <td>{{item.price}}</td>
-          <td>{{item.fee}}</td>
-          <td>{{item.volume}}</td>
-          <td>{{item.typeOrder}}</td>
-          <td>{{item.deviationPrice}}</td>
-          <td>{{item.idOrder}}</td>
-          <td>{{item.exchOrderId}}</td>
+        <tr *ngFor="let order of orders">
+          <td>{{order.time | date: 'mediumTime'}}</td>
+          <td>{{order.exchange}}</td>
+          <td>{{order.pair}}</td>
+          <td>{{order.price}}</td>
+          <td>{{order.fee}}</td>
+          <td>{{order.volume}}</td>
+          <td>{{order.typeOrder}}</td>
+          <td>{{order.deviationPrice}}</td> 
+          <td>{{order.exchOrderId}}</td>
         </tr>
       </tbody>
     </table>
