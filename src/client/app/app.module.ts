@@ -17,9 +17,14 @@ import { ShoppingListEditComponent } from './components/shopping-list/shopping-l
 import { UserComponent } from './components/user/user/user.component';
 import { TradesComponent } from './components/trades/trades.component';
 import { ExportComponent } from './components/export/export.component';
+import { ArbitrageComponent } from './components/arbitrage/arbitrage.component';
+import { ArbitrageEditComponent } from './components/arbitrage/arbitrage-edit/arbitrage-edit.component';
+import { OrderComponent } from './components/order/order.component';
+import { SettingComponent } from './components/setting/setting.component';
 
 // modules
 import { AppRoutingModule } from './app.routing.module';
+import { CommonModule } from '@angular/common';
 // import { GraphqlModule } from './app.graphql.module';
 import { GuardsModule } from './guards/guards.module';
 import { InterceptorsModule } from './interceptors/interceptors.module';
@@ -29,13 +34,10 @@ import { SharedModule } from './shared/shared.module';
 import { HttpModule } from '@angular/http';
 import {HttpClientModule} from '@angular/common/http';
 import { NgDatepickerModule } from 'ng2-datepicker';
-import { OrderComponent } from './components/order/order.component';
-import { SettingComponent } from './components/setting/setting.component';
 import { MatFormFieldModule, MatNativeDateModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ArbitrageComponent } from './components/arbitrage/arbitrage.component';
-import { ArbitrageEditComponent } from './components/arbitrage/arbitrage-edit/arbitrage-edit.component';
+
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -59,6 +61,8 @@ import { ArbitrageEditComponent } from './components/arbitrage/arbitrage-edit/ar
   ],
   imports: [
     AppRoutingModule,
+    CommonModule,
+    BrowserModule,
     BrowserModule.withServerTransition({ appId: 'nest-angular' }),
     BrowserTransferStateModule,
     BrowserAnimationsModule,
@@ -67,6 +71,7 @@ import { ArbitrageEditComponent } from './components/arbitrage/arbitrage-edit/ar
     SharedModule,
     GuardsModule,
     // GraphqlModule,
+    //NativeScriptCommonModule,
     InterceptorsModule,
     FormsModule,
     ReactiveFormsModule,

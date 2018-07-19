@@ -18,7 +18,8 @@ Get http://localhost:3000/sever-tcp/user-balance
 Get http://localhost:3000/orderBooks/order-books/3
 
 Get http://localhost:3000/orderBooks/order-books/?startDate=1530738000000&endDate=1530740800000
-
+Get http://localhost:3000/orderBooks/order-books/?startDate=1531902533100&endDate=1531903600158&asset=ETH
+Get http://localhost:3000/orderBooks/order-books/?startDate=1531902533100&endDate=1531903600158&asset=.*
 Get https://testnet.gateway.proximax.io/node/info
 
 Get https://mijinnet.gateway.proximax.io/node/info

@@ -22,8 +22,8 @@ export class OrderBookService {
     return await this.orderBookModel.find().exec();
   }
 
-  async getOrderBookByPeriod(startDate: number, endDate: number) {
-    return await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}},
+  async getOrderBookByPeriod(startDate: number, endDate: number, asset: string) {
+    return await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}, pair: {$regex: asset}},
     {_id: 0, exchangeName: 1, pair: 1, bid: 1, bidVolume: 1, ask: 1, askVolume: 1, time: 1}).exec();
   }
 }

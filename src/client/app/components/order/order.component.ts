@@ -1,5 +1,5 @@
 import { MatDatepicker } from '@angular/material';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from './../../services/user.service';
 import { Order } from './../../shared/models/order';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
@@ -12,6 +12,7 @@ import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 export class OrderComponent implements OnInit {
   @ViewChild(MatDatepicker) startPicker: MatDatepicker<Date>;
   @ViewChild(MatDatepicker) endPicker: MatDatepicker<Date>;
+  @ViewChild('asset') asset: ElementRef;
   startDate: any;
   endDate: any;
   angular5Csv: Angular5Csv;
@@ -23,7 +24,7 @@ export class OrderComponent implements OnInit {
     const interval = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
     let startOfDay = Math.floor(Date.now() / interval) * interval;
     let endOfDay = Date.now(); //let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
-    this.userService.getData<Order[]>(`orders/find/?startDate=${startOfDay}&endDate=${endOfDay}`)
+    this.userService.getData<Order[]>(`orders/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
       .subscribe(data => {
         this.orders = data;
         console.log('this.items :', this.orders);
@@ -40,12 +41,17 @@ export class OrderComponent implements OnInit {
     console.log('this.endDate :', this.endDate);
   }
 
+  public onAsset(event: any): void {
+    this.asset = event.valueOf();
+  }
+
   async download() {
     console.log(this.startDate, this.endDate);
     if (this.startDate && this.endDate) {
       const utcStartDate = Date.parse(this.startDate);
       const utcEndDate = Date.parse(this.endDate);
-      await this.userService.getData<Order[]>(`orders/find/?startDate=${utcStartDate}&endDate=${utcEndDate}`)
+      await this.userService.getData<Order[]>(
+        `orders/find/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.orders = data;
           this.createCsv(this.orders, this.startDate, this.endDate);

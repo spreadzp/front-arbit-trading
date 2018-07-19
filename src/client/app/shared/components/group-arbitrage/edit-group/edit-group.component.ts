@@ -1,8 +1,11 @@
-import { Exchange } from './../../../models/exchange';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgModule } from '@angular/core';
 import { ArbitrageExchange } from '../../../models/arbitrageExchange';
 import { ExchangeService } from '../../../../services/exchange.service';
+import { CommonModule, NgForOf } from '@angular/common';
 
+@NgModule({
+  imports: [CommonModule, NgForOf]
+  })
 @Component({
   selector: 'app-edit-group',
   templateUrl: './edit-group.component.html',
@@ -29,13 +32,42 @@ export class EditGroupComponent implements OnInit {
   private groupId: HTMLInputElement;
   private statusConnect: HTMLInputElement;
   private server: HTMLInputElement;
-  public tradeLines: ArbitrageExchange[];
+  //public tradeLines: ArbitrageExchange[] = [];
+   private tradeLines: ArbitrageExchange[] = [
+    {
+        IdGroupArbitrage: 'BTC',
+        exchange: 'bitfinex',
+        pair: 'BTC/USD',
+        memberOfExchange: 'Vasya',
+        tradeVolume: 0.01,
+        fee: 0.2,
+        deviation: 0.05,
+        serverName: 'Seul',
+        status: 'Connect',
+    },
+    {
+        IdGroupArbitrage: 'BTC',
+        exchange: 'bittrex',
+        pair: 'BTC/USDT',
+        memberOfExchange: 'Kolya',
+        tradeVolume: 0.01,
+        fee: 0.1,
+        deviation: 0.04,
+        serverName: 'EU',
+        status: 'Connect',
+    }
+]; 
 
   constructor(
     private readonly exchangeService: ExchangeService
   ) { }
 
   ngOnInit() {
+ /*  this.exchangeService.getCurrrentTradeLines()
+    .then((tradeLines: ArbitrageExchange[]) => {
+      this.tradeLines = tradeLines;
+      console.log('this.tradeLines :', this.tradeLines);
+    }); */
     this.exchangeName = this.nameExchange.nativeElement as HTMLInputElement;
     this.pairArbitrage = this.pair.nativeElement as HTMLInputElement;
     this.arbitMember = this.member.nativeElement as HTMLInputElement;
@@ -45,10 +77,7 @@ export class EditGroupComponent implements OnInit {
     this.groupId = this.idGroup.nativeElement as HTMLInputElement;
     this.statusConnect = this.status.nativeElement as HTMLInputElement;
     this.server = this.serverName.nativeElement as HTMLInputElement;
-    this.exchangeService.getCurrrentTradeLines()
-    .then((tradeLines: ArbitrageExchange[]) => {
-      this.tradeLines = tradeLines;
-    });
+    console.log("this.arbitMember", this.arbitMember);
   }
 
   createGroupArbitrage(): void {

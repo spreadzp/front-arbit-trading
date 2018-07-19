@@ -60,7 +60,7 @@
         <div class="col-xs-12">
           <button type="button"
             class="btn btn-success"
-            (click)="addNewTrade()">add New Arbitrage Line</button>
+            (click)="createGroupArbitrage()">add New Arbitrage Line</button>
           <button type="button"
             class="btn btn-primary"
             (click)="clearFields()">Clear</button>
@@ -85,7 +85,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tradeLine of tradeLines">
+       <!--  <tr *ngFor="let tradeLine of tradeLines">
           <td>{{ tradeLine.IdGroupArbitrage }}</td>
           <td>{{ tradeLine.exchange }}</td>
           <td>{{ tradeLine.pair }}</td>
@@ -94,8 +94,8 @@
           <td>{{ tradeLine.fee }}</td>
           <td>{{ tradeLine.deviation }}</td>
           <td>{{ tradeLine.serverName }}</td>
-          <td>{{ tradeLine.status }}</td>
-        </tr>
+          <td>{{ tradeLine.status }}</td> 
+        </tr> -->
       </tbody>
     </table>
   </div>
