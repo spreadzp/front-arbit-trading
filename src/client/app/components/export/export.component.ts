@@ -62,10 +62,10 @@ export class ExportComponent implements OnInit {
       showTitle: true,
       headers: ['exchangeName', 'pair', 'bid', 'bidVolume', 'ask', 'askVolume', 'time']
     };
-    let chunkArray: any[];
+    //let chunkArray: any[] = [];
     if (orderData.length > chuckSize) {
       console.log('orderData.length :', orderData.length);
-      chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: OrderBook) => orderData.splice(0, chuckSize));
+      const chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: OrderBook) => orderData.splice(0, chuckSize));
       console.log('chunkArray.length :', chunkArray.length);
       for (const iterator of chunkArray) {
         console.log('iterator :', iterator);
