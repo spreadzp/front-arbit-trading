@@ -1,11 +1,36 @@
-import { EventEmitter, Injectable } from '@angular/core'; 
+import { EventEmitter, Injectable } from '@angular/core';
 import { Exchange } from '../shared/models/exchange';
+import { ArbitrageExchange } from '../shared/models/arbitrageExchange';
 
 @Injectable()
 export class ExchangeService {
     public exchangeCreated: EventEmitter<Exchange> = new EventEmitter();
     // public ingredientsChanged: EventEmitter<Ingredient[]> = new EventEmitter();
 
+    private tradeLines: ArbitrageExchange[] = [
+        {
+            IdGroupArbitrage: 'BTC',
+            exchange: 'bitfinex',
+            pair: 'BTC/USD',
+            memberOfExchange: 'Vasya',
+            tradeVolume: 0.01,
+            fee: 0.2,
+            deviation: 0.05,
+            serverName: 'Seul',
+            status: 'Connect',
+        },
+        {
+            IdGroupArbitrage: 'BTC',
+            exchange: 'bittrex',
+            pair: 'BTC/USDT',
+            memberOfExchange: 'Kolya',
+            tradeVolume: 0.01,
+            fee: 0.1,
+            deviation: 0.04,
+            serverName: 'EU',
+            status: 'Connect',
+        }
+    ];
     private exchanges: Exchange[] = [
         {
             name: 'bitfinex',
@@ -80,8 +105,14 @@ export class ExchangeService {
         });
     }
 
-    public addGroup(group: Exchange) {
-        this.exchanges.push(group);
+    public getCurrrentTradeLines(): Promise<ArbitrageExchange[]> {
+        return new Promise<ArbitrageExchange[]>((resolve, reject) => {
+            resolve(this.tradeLines);
+        });
+    }
+
+    public addTradeLine(group: ArbitrageExchange) {
+        this.tradeLines.push(group);
         // this.ingredientsChanged.emit(this.ingredients.slice());
     }
 

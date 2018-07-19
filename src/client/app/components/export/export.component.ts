@@ -57,7 +57,7 @@ export class ExportComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       showTitle: true,
-      headers: ['exchangeName', 'pair', 'bid', 'ask', 'time']
+      headers: ['exchangeName', 'pair', 'bid', 'bidVolume', 'ask', 'askVolume', 'time']
     };
     let chunkArray: any[];
     if (orderData.length > chuckSize) {

@@ -6,5 +6,6 @@ export interface ArbitrageExchange {
     tradeVolume: number;
     fee: number;
     deviation: number;
+    serverName: string;
     status: string;
 }

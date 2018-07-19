@@ -35,7 +35,7 @@ const Config: IConfig = {
     tcpPort: 8000,
     wsPort: 1338,
     jwtSecret,
-    domain: '104.236.46.56',
+    domain: 'localhost',
     httpProtocol: 'http',
     wsProtocol: 'ws',
     forexApiKey: 'bfBuXo30skEAA0ES4Wz3lNQksUjcTuce',

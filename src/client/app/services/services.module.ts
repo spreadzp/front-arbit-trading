@@ -7,10 +7,11 @@ import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { ApiService } from './api.service';
 import { ArbitrageService } from './arbitrage.service';
+import { ExchangeService } from './exchange.service';
 
 @NgModule({
   imports: [HttpClientModule],
   providers: [AuthService, RecipesService, ShoppingListService,
-  UserService, ApiService, PersonValidatorService, ArbitrageService]
+  UserService, ApiService, PersonValidatorService, ArbitrageService, ExchangeService]
 })
 export class ServicesModule {}
