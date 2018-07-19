@@ -1,0 +1,101 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form>
+        <div class="row">
+            <div class="col-sm-5 form-group">
+              <label for="idGroup">Id Group</label>
+              <input #idGroup type="text" id="idGroup" class="form-control" />
+            </div> 
+          </div> 
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="nameExchange">Name Exchange</label>
+          <input #nameExchange type="text" id="nameExchange" class="form-control" />
+        </div> 
+      </div>
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="pair">Pair</label>
+          <input #pair type="text" id="pair" class="form-control" />
+        </div> 
+      </div>
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="member">Member</label>
+          <input #member type="text" id="member" class="form-control" />
+        </div> 
+      </div>  
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="tradeVolume">Trade Volume</label>
+          <input #tradeVolume type="text" id="tradeVolume" class="form-control" />
+        </div> 
+      </div> 
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="fee">Fee</label>
+          <input #fee type="text" id="fee" class="form-control" />
+        </div> 
+      </div> 
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="deviation">Deviation</label>
+          <input #deviation type="text" id="deviation" class="form-control" />
+        </div> 
+      </div> 
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="status">Status</label>
+          <input #status type="text" id="status" class="form-control" />
+        </div> 
+      </div> 
+     
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="serverName">Server Name</label>
+          <input #serverName type="text" id="serverName" class="form-control" />
+        </div> 
+      </div>    
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="button"
+            class="btn btn-success"
+            (click)="addNewTrade()">add New Arbitrage Line</button>
+          <button type="button"
+            class="btn btn-primary"
+            (click)="clearFields()">Clear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="panel">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>IdGroupArbitrage</th>
+          <th>exchange</th>
+          <th>pair</th>
+          <th>memberOfExchange</th>
+          <th>tradeVolume</th>
+          <th>fee</th>
+          <th>deviation</th>
+          <th>serverName</th>
+          <th>status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tradeLine of tradeLines">
+          <td>{{ tradeLine.IdGroupArbitrage }}</td>
+          <td>{{ tradeLine.exchange }}</td>
+          <td>{{ tradeLine.pair }}</td>
+          <td>{{ tradeLine.memberOfExchange }}</td>
+          <td>{{ tradeLine.tradeVolume }}</td>
+          <td>{{ tradeLine.fee }}</td>
+          <td>{{ tradeLine.deviation }}</td>
+          <td>{{ tradeLine.serverName }}</td>
+          <td>{{ tradeLine.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
