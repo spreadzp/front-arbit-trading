@@ -53,7 +53,6 @@ export class ExportComponent implements OnInit {
 
   createCsv(orderData: OrderBook[], startDate: string, endDate: string) {
     const chuckSize = 40000;
-    let lengthSting = 0;
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -62,18 +61,10 @@ export class ExportComponent implements OnInit {
       showTitle: true,
       headers: ['exchangeName', 'pair', 'bid', 'bidVolume', 'ask', 'askVolume', 'time']
     };
-    //let chunkArray: any[] = [];
-    if (orderData.length > chuckSize) {
-      console.log('orderData.length :', orderData.length);
-      const chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: OrderBook) => orderData.splice(0, chuckSize));
-      console.log('chunkArray.length :', chunkArray.length);
-      for (const iterator of chunkArray) {
-        console.log('iterator :', iterator);
-        lengthSting += iterator.length;
-        this.angular5Csv = new Angular5Csv(iterator, `Orders_${startDate}_${endDate}_length${lengthSting}`, options);
-      }
-    } else {
-      this.angular5Csv = new Angular5Csv(orderData, `Orders_${startDate}_${endDate}`, options);
+    let i, j, temparray;
+    for (i = 0, j = orderData.length; i < j; i += chuckSize) {
+      temparray = orderData.slice(i, i + chuckSize);
+      this.angular5Csv = new Angular5Csv(temparray, `Orders_${startDate}_${endDate}_length${i}`, options);
     }
   }
 }
