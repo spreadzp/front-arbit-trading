@@ -7,11 +7,14 @@ import { MemberComponent } from './components/member/member.component';
 import { ArbitrageExchangeComponent } from './components/arbitrage-exchange/arbitrage-exchange.component';
 import { GroupArbitrageComponent } from './components/group-arbitrage/group-arbitrage.component';
 import { EditGroupComponent } from './components/group-arbitrage/edit-group/edit-group.component';
+import { GroupExchangeComponent } from './components/group-arbitrage/group-exchange/group-exchange.component';
+import { MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule } from '@angular/material';
 @NgModule({
   declarations: [DropdownDirective, IngredientComponent, ExchangeComponent,
-    PairComponent, MemberComponent, ArbitrageExchangeComponent, GroupArbitrageComponent, EditGroupComponent],
+    PairComponent, MemberComponent, ArbitrageExchangeComponent, GroupArbitrageComponent, EditGroupComponent, GroupExchangeComponent],
   exports: [DropdownDirective, IngredientComponent, ExchangeComponent,
     PairComponent, MemberComponent, ArbitrageExchangeComponent,
-    GroupArbitrageComponent]
+    GroupArbitrageComponent],
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule]
 })
 export class SharedModule { }

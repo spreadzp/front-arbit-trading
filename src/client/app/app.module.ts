@@ -34,7 +34,7 @@ import { SharedModule } from './shared/shared.module';
 import { HttpModule } from '@angular/http';
 import {HttpClientModule} from '@angular/common/http';
 import { NgDatepickerModule } from 'ng2-datepicker';
-import { MatFormFieldModule, MatNativeDateModule } from '@angular/material';
+import { MatFormFieldModule, MatNativeDateModule, MatCheckboxModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -81,7 +81,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCheckboxModule,
   ],
+  exports: [MatCheckboxModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -56,7 +56,7 @@ export class EditGroupComponent implements OnInit {
         serverName: 'EU',
         status: 'Connect',
     }
-]; 
+];
 
   constructor(
     private readonly exchangeService: ExchangeService

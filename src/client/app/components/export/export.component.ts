@@ -53,7 +53,7 @@ export class ExportComponent implements OnInit {
 
   createCsv(orderData: OrderBook[], startDate: string, endDate: string, asset: string) {
     const stDate = new Date(startDate).toDateString();
-    const finishfDate = new Date(endDate).toDateString(); 
+    const finishfDate = new Date(endDate).toDateString();
     const chuckSize = 40000;
     const options = {
       fieldSeparator: ',',
