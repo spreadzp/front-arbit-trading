@@ -44,14 +44,16 @@ export class ExportComponent implements OnInit {
         `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.items = data;
-          this.createCsv(this.items, this.startDate, this.endDate);
+          this.createCsv(this.items, this.startDate, this.endDate, this.asset.toString());
         });
     } else {
       alert('Введите даты поискового диапазона!');
     }
   }
 
-  createCsv(orderData: OrderBook[], startDate: string, endDate: string) {
+  createCsv(orderData: OrderBook[], startDate: string, endDate: string, asset: string) {
+    const stDate = new Date(startDate).toDateString();
+    const finishfDate = new Date(endDate).toDateString(); 
     const chuckSize = 40000;
     const options = {
       fieldSeparator: ',',
@@ -64,7 +66,7 @@ export class ExportComponent implements OnInit {
     let i, j, temparray;
     for (i = 0, j = orderData.length; i < j; i += chuckSize) {
       temparray = orderData.slice(i, i + chuckSize);
-      this.angular5Csv = new Angular5Csv(temparray, `Orders_${startDate}_${endDate}_length${i}`, options);
+      this.angular5Csv = new Angular5Csv(temparray, `${asset}_Orderbooks_${stDate}_${finishfDate}_length${i}`, options);
     }
   }
 }

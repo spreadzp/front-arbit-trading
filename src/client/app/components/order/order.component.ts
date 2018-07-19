@@ -22,8 +22,8 @@ export class OrderComponent implements OnInit {
 
   ngOnInit() {
     const interval = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
-    let startOfDay = Math.floor(Date.now() / interval) * interval;
-    let endOfDay = Date.now(); //let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
+    const startOfDay = Math.floor(Date.now() / interval) * interval;
+    const endOfDay = Date.now(); //let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
     this.userService.getData<Order[]>(`orders/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
       .subscribe(data => {
         this.orders = data;
@@ -53,16 +53,17 @@ export class OrderComponent implements OnInit {
         `orders/find/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.orders = data;
-          this.createCsv(this.orders, this.startDate, this.endDate);
+          this.createCsv(this.orders, this.startDate, this.endDate, this.asset.toString());
         });
     } else {
       alert('Введите даты поискового диапазона!');
     }
   }
 
-  createCsv(orderData: Order[], startDate: string, endDate: string) {
+  createCsv(orderData: Order[], startDate: string, endDate: string, asset: string) {
+    const stDate = new Date(startDate).toDateString();
+    const finishfDate = new Date(endDate).toDateString();
     const chuckSize = 40000;
-    let lengthSting = 0;
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -72,15 +73,10 @@ export class OrderComponent implements OnInit {
       headers: ['exchangeName', 'pair', 'price', 'volume',
         'typeOrder', 'fee', 'arbitrageId', 'deviationPrice', 'time']
     };
-    let chunkArray: any[];
-    if (orderData.length > chuckSize) {
-      chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: Order) => orderData.splice(0, chuckSize));
-      for (const iterator of chunkArray) {
-        lengthSting += iterator.length;
-        this.angular5Csv = new Angular5Csv(iterator, `Orders_${startDate}_${endDate}_length${lengthSting}`, options);
-      }
-    } else {
-      this.angular5Csv = new Angular5Csv(orderData, `Orders_${startDate}_${endDate}`, options);
+    let i, j, temparray;
+    for (i = 0, j = orderData.length; i < j; i += chuckSize) {
+      temparray = orderData.slice(i, i + chuckSize);
+      this.angular5Csv = new Angular5Csv(temparray, `${asset}_Orders_${stDate}_${finishfDate}_length${i}`, options);
     }
   }
 }
