@@ -23,7 +23,7 @@ export class OrderBookService {
   }
 
   async getOrderBookByPeriod(startDate: number, endDate: number, asset: string) {
-    return await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}, pair: {$regex: asset}},
+    return await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}, pair: {$regex: asset, $options: 'm'}},
     {_id: 0, exchangeName: 1, pair: 1, bid: 1, bidVolume: 1, ask: 1, askVolume: 1, time: 1}).exec();
   }
 }

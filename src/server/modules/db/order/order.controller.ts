@@ -22,7 +22,8 @@ export class OrderController {
 
   @Get('find/')
   async getOrderByPeriod(@Request() req: any): Promise<Order[]> {
-    const orders = await this.ordersService.getOrderByPeriod(req.query.startDate, req.query.endDate);
+    const orders = await this.ordersService.getOrderByPeriod(
+      req.query.startDate, req.query.endDate ,req.query.asset);
     return orders;
   }
 

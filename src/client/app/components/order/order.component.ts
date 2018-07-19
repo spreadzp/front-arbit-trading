@@ -46,7 +46,6 @@ export class OrderComponent implements OnInit {
   }
 
   async download() {
-    console.log(this.startDate, this.endDate);
     if (this.startDate && this.endDate) {
       const utcStartDate = Date.parse(this.startDate);
       const utcEndDate = Date.parse(this.endDate);
