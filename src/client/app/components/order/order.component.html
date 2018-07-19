@@ -24,4 +24,33 @@
       </div>
     </div>
   </div>
-  
+  <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>time</th>
+          <th>exchange</th>
+          <th>pair</th>
+          <th>price</th>
+          <th>fee</th>
+          <th>volume</th>
+          <th>type order</th>
+          <td>{{deviation Price}}</td>
+          <th>id order</th>
+          <th>id exchange order</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>{{item.time | date: 'mediumTime'}}</td>
+          <td>{{item.exchange}}</td>
+          <td>{{item.pair}}</td>
+          <td>{{item.price}}</td>
+          <td>{{item.fee}}</td>
+          <td>{{item.volume}}</td>
+          <td>{{item.typeOrder}}</td>
+          <td>{{item.deviationPrice}}</td>
+          <td>{{item.idOrder}}</td>
+          <td>{{item.exchOrderId}}</td>
+        </tr>
+      </tbody>
+    </table>
