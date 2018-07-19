@@ -68,6 +68,7 @@ export class ExportComponent implements OnInit {
       chunkArray = new Array(Math.ceil(orderData.length / chuckSize)).map((_: OrderBook) => orderData.splice(0, chuckSize));
       console.log('chunkArray.length :', chunkArray.length);
       for (const iterator of chunkArray) {
+        console.log('iterator :', iterator);
         lengthSting += iterator.length;
         this.angular5Csv = new Angular5Csv(iterator, `Orders_${startDate}_${endDate}_length${lengthSting}`, options);
       }
