@@ -10,7 +10,6 @@ export class GroupArbitrageComponent implements OnInit {
 
   @Input() group: GroupArbitrage;
   @Output() groupRemoved: EventEmitter<GroupArbitrage> = new EventEmitter();
-
   constructor() { }
 
   ngOnInit() {

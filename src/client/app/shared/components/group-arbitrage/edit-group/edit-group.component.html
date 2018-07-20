@@ -1,103 +1,88 @@
-<div class="row">
-  <div class="col-xs-12">
-    <form>
-        <div class="row">
-            <div class="col-sm-5 form-group">
-              <label for="idGroup">Id Group</label>
-              <input #idGroup type="text" id="idGroup" class="form-control" />
-            </div> 
-          </div> 
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="nameExchange">Name Exchange</label>
-          <input #nameExchange type="text" id="nameExchange" class="form-control" />
-        </div> 
+<mat-accordion>
+  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Panel for adding new trade line of arbitrage
+      </mat-panel-title>
+      <mat-panel-description>
+        Panel {{panelOpenState ? 'open' : 'closed'}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="row">
+      <div class="col-xs-12">
+        <form>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" id="idGroup" placeholder="idGroup">
+            </mat-form-field>
+          </form>
+          <mat-form-field>
+            <mat-select [(value)]="nameExchange" placeholder="exchange">
+              <mat-option>None</mat-option>
+              <mat-option value="bittrex">bittrex</mat-option>
+              <mat-option value="bitfinex">bitfinex</mat-option>
+              <mat-option value="hitBtc">hitBtc</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select [(value)]="pair" placeholder="Choise pair">
+              <mat-option>None</mat-option>
+              <mat-option value="BTC/USD">BTC/USD</mat-option>
+              <mat-option value="ETH/USD">ETH/USD</mat-option>
+              <mat-option value="BTC/JPY">BTC/JPY</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select [(value)]="member" placeholder="Choise member">
+              <mat-option>None</mat-option>
+              <mat-option value="Ivan">Ivan</mat-option>
+              <mat-option value="Artur">Artur</mat-option>
+              <mat-option value="Pavel">Pavel</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" id="tradeVolume" placeholder="Trade Volume">
+            </mat-form-field>
+          </form>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" id="fee" placeholder="Fee">
+            </mat-form-field>
+          </form>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" id="deviation" placeholder="Deviation">
+            </mat-form-field>
+          </form>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" id="status" placeholder="Status">
+            </mat-form-field>
+          </form>
+          <mat-form-field>
+            <mat-select [(value)]="serverName" placeholder="server Name">
+              <mat-option>None</mat-option>
+              <mat-option value="EU">Ivan</mat-option>
+              <mat-option value="USA">Artur</mat-option>
+              <mat-option value="Honkong">Pavel</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput type="text" id="serverName" placeholder="serverName">
+            </mat-form-field>
+          </form>
+          <div class="row">
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-success" (click)="createGroupArbitrage()">add New Arbitrage Line</button>
+              <button type="button" class="btn btn-primary" (click)="clearFields()">Clear</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="pair">Pair</label>
-          <input #pair type="text" id="pair" class="form-control" />
-        </div> 
-      </div>
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="member">Member</label>
-          <input #member type="text" id="member" class="form-control" />
-        </div> 
-      </div>  
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="tradeVolume">Trade Volume</label>
-          <input #tradeVolume type="text" id="tradeVolume" class="form-control" />
-        </div> 
-      </div> 
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="fee">Fee</label>
-          <input #fee type="text" id="fee" class="form-control" />
-        </div> 
-      </div> 
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="deviation">Deviation</label>
-          <input #deviation type="text" id="deviation" class="form-control" />
-        </div> 
-      </div> 
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="status">Status</label>
-          <input #status type="text" id="status" class="form-control" />
-        </div> 
-      </div> 
-     
-      <div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="serverName">Server Name</label>
-          <input #serverName type="text" id="serverName" class="form-control" />
-        </div> 
-      </div>    
-      <div class="row">
-        <div class="col-xs-12">
-          <button type="button"
-            class="btn btn-success"
-            (click)="createGroupArbitrage()">add New Arbitrage Line</button>
-          <button type="button"
-            class="btn btn-primary"
-            (click)="clearFields()">Clear</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-<div class="panel">
-    <!-- <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>IdGroupArbitrage</th>
-          <th>exchange</th>
-          <th>pair</th>
-          <th>memberOfExchange</th>
-          <th>tradeVolume</th>
-          <th>fee</th>
-          <th>deviation</th>
-          <th>serverName</th>
-          <th>status</th>
-        </tr>
-      </thead> -->
-      <!-- <tbody>
-      <tr *ngFor="let tradeLine of tradeLines">
-          <td>{{ tradeLine.IdGroupArbitrage }}</td>
-          <td>{{ tradeLine.exchange }}</td>
-          <td>{{ tradeLine.pair }}</td>
-          <td>{{ tradeLine.memberOfExchange }}</td>
-          <td>{{ tradeLine.tradeVolume }}</td>
-          <td>{{ tradeLine.fee }}</td>
-          <td>{{ tradeLine.deviation }}</td>
-          <td>{{ tradeLine.serverName }}</td>
-          <td>{{ tradeLine.status }}</td> 
-        </tr>
-      </tbody> -->
-    <!-- </table> -->
-    
-  </div>
-  <app-group-exchange></app-group-exchange>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<app-group-exchange [dataRefresh]="newData"></app-group-exchange>

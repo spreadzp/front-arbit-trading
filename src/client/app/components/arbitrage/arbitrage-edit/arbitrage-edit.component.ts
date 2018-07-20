@@ -23,7 +23,6 @@ export class ArbitrageEditComponent implements OnInit {
     const group: GroupArbitrage = new GroupArbitrage(
       this.idGroupInput.value,
     );
-
     this.arbitrageService.addGroup(group);
     this.clearFields();
   }

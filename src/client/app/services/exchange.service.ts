@@ -1,3 +1,6 @@
+import { subscribe } from 'graphql';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Exchange } from '../shared/models/exchange';
 import { ArbitrageExchange } from '../shared/models/arbitrageExchange';
@@ -5,6 +8,7 @@ import { ArbitrageExchange } from '../shared/models/arbitrageExchange';
 @Injectable()
 export class ExchangeService {
     public exchangeCreated: EventEmitter<Exchange> = new EventEmitter();
+    public arbitrageExchangeCreated: EventEmitter<ArbitrageExchange> = new EventEmitter();
     // public ingredientsChanged: EventEmitter<Ingredient[]> = new EventEmitter();
 
     private tradeLines: ArbitrageExchange[] = [
@@ -31,6 +35,7 @@ export class ExchangeService {
             status: 'Connect',
         }
     ];
+    headerTableNames = ['select', 'pair', 'exchange', 'memberOfExchange', 'tradeVolume', 'fee', 'deviation', 'serverName', 'status'];
     private exchanges: Exchange[] = [
         {
             name: 'bitfinex',
@@ -105,14 +110,17 @@ export class ExchangeService {
         });
     }
 
-    public getCurrrentTradeLines(): Promise<ArbitrageExchange[]> {
-        return new Promise<ArbitrageExchange[]>((resolve, reject) => {
-            resolve(this.tradeLines);
-        });
+    public getCurrrentTradeLines(): Observable<ArbitrageExchange[]> {
+        return  Observable.of(this.tradeLines);
+    }
+
+    public getHeaderTable(): Observable<string[]> {
+        return Observable.of(this.headerTableNames);
     }
 
     public addTradeLine(group: ArbitrageExchange) {
         this.tradeLines.push(group);
+        console.log('this.tradeLines :', this.tradeLines );
         // this.ingredientsChanged.emit(this.ingredients.slice());
     }
 

@@ -8,13 +8,16 @@ import { ArbitrageExchangeComponent } from './components/arbitrage-exchange/arbi
 import { GroupArbitrageComponent } from './components/group-arbitrage/group-arbitrage.component';
 import { EditGroupComponent } from './components/group-arbitrage/edit-group/edit-group.component';
 import { GroupExchangeComponent } from './components/group-arbitrage/group-exchange/group-exchange.component';
-import { MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule, MatExpansionModule, MatFormFieldModule,
+   MatSelectModule, MatInputModule} from '@angular/material';
 @NgModule({
   declarations: [DropdownDirective, IngredientComponent, ExchangeComponent,
     PairComponent, MemberComponent, ArbitrageExchangeComponent, GroupArbitrageComponent, EditGroupComponent, GroupExchangeComponent],
   exports: [DropdownDirective, IngredientComponent, ExchangeComponent,
     PairComponent, MemberComponent, ArbitrageExchangeComponent,
     GroupArbitrageComponent],
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule]
+  imports: [MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule, MatExpansionModule, MatFormFieldModule,
+     MatSelectModule, MatInputModule
+  ]
 })
 export class SharedModule { }
