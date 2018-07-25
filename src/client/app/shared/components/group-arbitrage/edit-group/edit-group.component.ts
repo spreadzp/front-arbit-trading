@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { GroupExchangeComponent } from './../group-exchange/group-exchange.component';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { ArbitrageExchange } from '../../../models/arbitrageExchange';
 import { ExchangeService } from '../../../../services/exchange.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-group',
@@ -8,9 +10,8 @@ import { ExchangeService } from '../../../../services/exchange.service';
   styleUrls: ['./edit-group.component.scss']
 })
 export class EditGroupComponent {
-  @Output() onChanged = new EventEmitter<boolean>();
-
-  @Output() arbitrageExchangeAdded: EventEmitter<ArbitrageExchange> = new EventEmitter();
+  @ViewChild(GroupExchangeComponent) groupExchange: GroupExchangeComponent;
+  //@ViewChild('formEdit') formEdit: any;
   groupId = '';
   panelOpenState = false;
   nameExchange = '';
@@ -19,10 +20,16 @@ export class EditGroupComponent {
   tradeVolume = 0;
   fee = 0;
   deviation = 0;
-  newData = false;
   status = '';
   serverName = '';
+  [propName: string]: any;
+
   constructor(private readonly exchangeService: ExchangeService) { }
+  setStatus(event: any) {
+    const fieldName: string = event.srcElement.id;
+    this[fieldName] = event.target.value;
+  }
+
   createGroupArbitrage(): void {
     const line: ArbitrageExchange = {
       IdGroupArbitrage: this.groupId,
@@ -35,23 +42,20 @@ export class EditGroupComponent {
       serverName: this.serverName,
       status: this.status,
     };
+
     this.exchangeService.addTradeLine(line);
-    this.newData = true;
-    this.onChanged.emit(this.newData);
-    this.arbitrageExchangeAdded.emit(line);
+    this.groupExchange.getTradeLinesData();
     this.clearFields();
   }
 
   clearFields(): void {
     this.groupId = '';
-    this.panelOpenState = false;
     this.nameExchange = '';
     this.pair = '';
     this.member = '';
     this.tradeVolume = 0;
     this.fee = 0;
     this.deviation = 0;
-    this.newData = false;
     this.status = '';
     this.serverName = '';
   }

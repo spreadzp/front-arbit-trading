@@ -10,7 +10,7 @@ import * as mongoose from 'mongoose';
 export class OrderService {
   constructor(@InjectModel('Order') private readonly orderModel: Model<Order>) { }
 
-  async create(createOrderDto: OrderDto){
+  async create(createOrderDto: OrderDto) {
     const createdOrder = new this.orderModel(createOrderDto);
     return await createdOrder.save();
   }
@@ -20,15 +20,23 @@ export class OrderService {
     await createdOrder.save();
   }
 
-  async findAll(): Promise<Order[]> {
-    return await this.orderModel.find().exec();
+  async updateStatusOrder(arbitOrderId: string, typeUpdateOrder: string, exchangeOrderId: string, statusOrder: string, reasonRejected: string) {
+    await this.orderModel.updateOne({ arbitrageId: arbitOrderId, typeOrder: typeUpdateOrder }, {
+      $set: {
+        exchangeId: exchangeOrderId, status: statusOrder, reason: reasonRejected,
+      }
+    });
+  }
+
+  async findOrderById(arbitValueId: string, typeOppositeOrder: string): Promise<Order> {
+    return await this.orderModel.findOne({arbitrageId: arbitValueId, typeOrder: typeOppositeOrder});
   }
 
   async getOrderByPeriod(startDate: number, endDate: number, asset: string): Promise<Order[]> {
-    return await this.orderModel.find({ time: { $gte: startDate, $lt: endDate }, pair: {$regex: asset, $options: 'm'}},
+    return await this.orderModel.find({ time: { $gte: startDate, $lt: endDate }, pair: { $regex: asset, $options: 'm' } },
       {
         _id: 0, exchange: 1, pair: 1, price: 1, volume: 1, typeOrder: 1, statusOrder: 1, fee: 1,
-        arbitrageId: 1, deviationPrice: 1, time: 1,
+        arbitrageId: 1, exchangeId: 1, deviationPrice: 1, time: 1, status: 1, reason: 1
       }).exec();
   }
 }

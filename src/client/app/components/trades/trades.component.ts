@@ -72,7 +72,7 @@ export class TradesComponent implements OnInit {
       showLabels: true,
       showTitle: true,
       headers: ['exchangeName', 'pair', 'price', 'volume',
-        'typeOrder', 'idOrder', 'exchOrderId', 'time']
+        'typeOrder', 'arbitrageId', 'exchOrderId', 'time']
     };
     let i, j, temparray;
     for (i = 0, j = orderData.length; i < j; i += chuckSize) {

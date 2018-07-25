@@ -6,6 +6,9 @@ export interface Order {
     typeOrder: string;
     fee: number;
     arbitrageId: string;
+    exchangeId: string;
     deviationPrice: number;
     time: string;
+    status: string;
+    reason: string;
 }

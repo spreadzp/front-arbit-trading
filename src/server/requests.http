@@ -58,3 +58,8 @@ content-type: application/json
     "deviationPrice": 0.05, 
     "time": "1531474565317"
 }
+
+
+GET http://localhost:8888/v1/wallet/EOS6z87aEYnSaLXt4GfgX4WRXM9g44zU7N84FFkxKJ1pByCc1AzX7
+
+ 

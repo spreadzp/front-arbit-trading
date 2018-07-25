@@ -8,9 +8,11 @@ export interface Order extends Document {
     readonly typeOrder: string;
     readonly fee: number;
     readonly arbitrageId: string;
+    readonly exchangeId: string;
     readonly deviationPrice: number;
     readonly time: string;
     readonly host: string;
     readonly port: number;
-    readonly statusOrder: string;
+    readonly status: string;
+    readonly reason: string;
 }

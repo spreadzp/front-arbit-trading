@@ -10,7 +10,10 @@ export class OrderDto {
     readonly fee: number;
     readonly deviationPrice: number;
     readonly arbitrageId: string;
+    readonly exchangeId: string;
     readonly time: string;
     readonly host: string;
     readonly port: number;
+    readonly status: string;
+    readonly reason: string;
   }

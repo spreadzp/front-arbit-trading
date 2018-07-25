@@ -10,28 +10,20 @@ import { ExchangeService } from '../../../../services/exchange.service';
   styleUrls: ['./group-exchange.component.scss']
 })
 // implements OnInit
-export class GroupExchangeComponent implements OnInit, OnChanges {
-  @Output() onChanged = new EventEmitter<boolean>();
-  @Input() dataRefresh: boolean;
+export class GroupExchangeComponent implements OnInit {
   displayedColumns: string[] = [];
   tradeLines: ArbitrageExchange[] = [];
   dataSource: MatTableDataSource<ArbitrageExchange>;
   selection: SelectionModel<ArbitrageExchange>;
   constructor(
-     private readonly exchangeService: ExchangeService
-   ) { }
+    private readonly exchangeService: ExchangeService
+  ) { }
 
-    ngOnInit() {
-      this.getTradeLinesData();
-      this.selection = new SelectionModel<ArbitrageExchange>(true, []);
-      }
+  ngOnInit() {
+    this.getTradeLinesData();
+    this.selection = new SelectionModel<ArbitrageExchange>(true, []);
+  }
 
-      ngOnChanges() { 
-        if (this.dataRefresh) {
-          this.getTradeLinesData();
-          this.dataRefresh = false;
-        }
-    }
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -47,13 +39,13 @@ export class GroupExchangeComponent implements OnInit, OnChanges {
   }
   getTradeLinesData() {
     this.exchangeService.getCurrrentTradeLines()
-    .subscribe(data => {
-      this.tradeLines = data;
-      this.dataSource = new MatTableDataSource<ArbitrageExchange>(this.tradeLines);
-    });
+      .subscribe(data => {
+        this.tradeLines = data;
+        this.dataSource = new MatTableDataSource<ArbitrageExchange>(this.tradeLines);
+      });
     this.exchangeService.getHeaderTable()
-    .subscribe((header) => {
-      this.displayedColumns = header;
-    });
+      .subscribe((header) => {
+        this.displayedColumns = header;
+      });
   }
 }

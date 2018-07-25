@@ -6,7 +6,7 @@ export interface Trade extends Document {
     price: number;
     volume: number;
     typeOrder: string;
-    idOrder: string;
+    arbitrageId: string;
     exchOrderId: string;
     time: string;
 }

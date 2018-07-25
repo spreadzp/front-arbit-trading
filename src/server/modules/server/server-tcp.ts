@@ -20,6 +20,7 @@ export class ServerTcpBot {
     parser: Parser;
     clientsTcp: ClientTcp[] = [];
     stateTrading: StateTrading[] = [];
+    startFlag = true;
 
     constructor(
         private readonly orderBooksService: OrderBookService,
@@ -36,22 +37,45 @@ export class ServerTcpBot {
                     if (trades.length) {
                         for (const trade of trades) {
                             this.tradeService.addNewData(trade);
+                            this.cancelOppositeArbitOrder(trade);
                             this.requestBalanceArbitId(trade);
                         }
                     }
                 }
+                if (message.type === 'notification' && message.payload.method === 'statusOrder') {
+                    this.orderService.updateStatusOrder(message.payload.params[0], message.payload.params[1],
+                        message.payload.params[2], message.payload.params[3], message.payload.params[4]);
+                    if (!this.startFlag) {
+                        const orders = this.parser.makeOrders();
+                        if (orders) {
+                            this.sendOrdersToBot(orders);
+                        }
+                    }
+                    if (message.payload.params[2] !== 'open') {
+                        const trade = {
+                            exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
+                            idOrder: message.payload.params[0], exchOrderId: '', time: ''
+                        };
+                        this.parser.unblockTradingPair(trade);
+                    }
+                }
                 if (message.type === 'notification' && message.payload.method === 'resCheckOrder') {
-                   // const currentBalanceArbitId = this.balanceService.addOppositeTrade(message.payload.params[0])
+                    // const currentBalanceArbitId = this.balanceService.addOppositeTrade(message.payload.params[0])
                     // this.parser.unblockTradingPair(trade);
                     const checkingOrder = JSON.parse(message.payload.params[0]);
                     console.log('+++@@@!!!checkingOrder :', checkingOrder);
                 } else {
                     const parsedMessage = this.parser.parseTcpMessage(message);
                     this.parser.calculateAskBid(parsedMessage);
-                    const orders = this.parser.makeOrders();
-                    if (orders) {
-                        this.sendOrdersToBot(orders);
+                    if (this.startFlag) {
+                        const orders = this.parser.makeOrders();
+                        if (orders) {
+                            this.sendOrdersToBot(orders);
+                            this.startFlag = false;
+                        }
+
                     }
+
                 }
             });
         });
@@ -63,8 +87,21 @@ export class ServerTcpBot {
             return (signature: string) => auth.verify(signature);
         };
     }
+
+    private cancelOppositeArbitOrder(trade: Trade) {
+        const type = trade.typeOrder === 'sell' ? 'buy' : 'sell';
+        return this.orderService.findOrderById(trade.arbitrageId, type)
+        .then((order) => {
+            const oppositeCheckOrder = {
+                name: 'checkOrder', order: { orderIdExchange: order.exchangeId, pairOrder: order.pair, type: order.typeOrder },
+                serverPort: order.port, host: order.host,
+            };
+            this.startClient(oppositeCheckOrder);
+        });
+    }
+
     private requestBalanceArbitId(trade: Trade) {
-        const oppositeArbitOrder = this.parser.getOppositeOrder(trade.idOrder, trade.typeOrder);
+        const oppositeArbitOrder = this.parser.getOppositeOrder(trade.arbitrageId, trade.typeOrder);
         if (oppositeArbitOrder) {
             const oppositeCheckOrder = {
                 name: 'checkOrder', order: { arbitOrderId: oppositeArbitOrder.arbitOrderId },
@@ -96,7 +133,8 @@ export class ServerTcpBot {
                     serverPort: currentOrder.port, host: currentOrder.host,
                     order: currentOrder,
                 };
-                if (this.parser.accessTrading(currentOrder) && parametersOrder.order.price > 0) {
+                const enableTrading = this.parser.accessTrading(currentOrder);
+                if (enableTrading && parametersOrder.order.price > 0) {
                     this.startClient(parametersOrder);
                     this.orderService.addNewData(currentOrder);
                     this.parser.setStatusTrade(currentOrder);

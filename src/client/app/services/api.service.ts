@@ -55,13 +55,12 @@ export class ApiService {
 
   onRequestError(err: Response): any {
     const statusCode = err.status;
-    const body = err.json();
+    //const body = err.json();
     const error = {
       statusCode,
-      body
+      err
     };
 
-    return Observable.throw(error);
+    return Observable.of(error);
   }
-
 }

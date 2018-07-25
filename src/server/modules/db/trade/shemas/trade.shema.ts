@@ -6,7 +6,7 @@ export const TradeSchema = new mongoose.Schema({
     price: Number,
     volume: Number,
     typeOrder: String,
-    idOrder: String,
+    arbitrageId: String,
     exchOrderId: String,
     time: String,
 });

@@ -10,26 +10,26 @@
     </mat-expansion-panel-header>
     <div class="row">
       <div class="col-xs-12">
-        <form>
+        <form id="formEdit">
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <input matInput type="text" id="idGroup" placeholder="idGroup">
+              <input matInput type="text" (keyup)="setStatus($event)" id="idGroup" placeholder="idGroup">
             </mat-form-field>
-          </form>
-          <mat-form-field>
-            <mat-select [(value)]="nameExchange" placeholder="exchange">
-              <mat-option>None</mat-option>
-              <mat-option value="bittrex">bittrex</mat-option>
-              <mat-option value="bitfinex">bitfinex</mat-option>
-              <mat-option value="hitBtc">hitBtc</mat-option>
-            </mat-select>
-          </mat-form-field>
+          </form>        
           <mat-form-field>
             <mat-select [(value)]="pair" placeholder="Choise pair">
               <mat-option>None</mat-option>
               <mat-option value="BTC/USD">BTC/USD</mat-option>
               <mat-option value="ETH/USD">ETH/USD</mat-option>
               <mat-option value="BTC/JPY">BTC/JPY</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select [(value)]="nameExchange" placeholder="exchange">
+              <mat-option>None</mat-option>
+              <mat-option value="bittrex">bittrex</mat-option>
+              <mat-option value="bitfinex">bitfinex</mat-option>
+              <mat-option value="hitBtc">hitBtc</mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field>
@@ -42,35 +42,30 @@
           </mat-form-field>
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <input matInput type="number" id="tradeVolume" placeholder="Trade Volume">
+              <input matInput type="number" (keyup)="setStatus($event)" id="tradeVolume" placeholder="Trade Volume">
             </mat-form-field>
           </form>
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <input matInput type="number" id="fee" placeholder="Fee">
+              <input matInput type="number" (keyup)="setStatus($event)" id="fee" placeholder="Fee">
             </mat-form-field>
           </form>
           <form class="example-form">
             <mat-form-field class="example-full-width">
-              <input matInput type="number" id="deviation" placeholder="Deviation">
-            </mat-form-field>
-          </form>
-          <form class="example-form">
-            <mat-form-field class="example-full-width">
-              <input matInput type="text" id="status" placeholder="Status">
+              <input matInput type="number" (keyup)="setStatus($event)" id="deviation" placeholder="Deviation">
             </mat-form-field>
           </form>
           <mat-form-field>
-            <mat-select [(value)]="serverName" placeholder="server Name">
+            <mat-select [(value)]="serverName" placeholder="Server Name">
               <mat-option>None</mat-option>
-              <mat-option value="EU">Ivan</mat-option>
-              <mat-option value="USA">Artur</mat-option>
-              <mat-option value="Honkong">Pavel</mat-option>
+              <mat-option value="EU">EU</mat-option>
+              <mat-option value="USA">USA</mat-option>
+              <mat-option value="Honkong">Honkong</mat-option>
             </mat-select>
           </mat-form-field>
           <form class="example-form">
-            <mat-form-field class="example-full-width">
-              <input matInput type="text" id="serverName" placeholder="serverName">
+            <mat-form-field class="example-full-width" >
+              <input matInput type="text" (keyup)="setStatus($event)" id="status" placeholder="Status connection">
             </mat-form-field>
           </form>
           <div class="row">
@@ -85,4 +80,4 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<app-group-exchange [dataRefresh]="newData"></app-group-exchange>
+<app-group-exchange></app-group-exchange>
