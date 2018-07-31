@@ -15,7 +15,7 @@ export class OrderService {
     return await createdOrder.save();
   }
 
-  async addNewData(data: Order) {
+  async addNewOrder(data: Order) {
     const createdOrder = await new this.orderModel(data);
     await createdOrder.save();
   }

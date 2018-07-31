@@ -13,11 +13,11 @@ export class TradeController {
         this.tradesService.create(tradeDto);
     }
 
-    @Get('all')
+   /*  @Get('all')
     async findAll(): Promise<Trade[]> {
         const trades = await this.tradesService.findAll();
         return trades;
-    }
+    } */
 
     @Get('find/')
     async getTradeByPeriod(@Request() req: any): Promise<Trade[]> {

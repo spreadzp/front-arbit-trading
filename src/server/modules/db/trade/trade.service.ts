@@ -8,7 +8,7 @@ import { Trade } from '../../common/models/trade';
 export class TradeService {
   constructor(@InjectModel('Trade') private readonly tradeModel: Model<Trade>) { }
 
-  async create(createTradeDto: TradeDto): Promise<Trade> {
+  async create(createTradeDto: TradeDto) {
     const createdTrade = new this.tradeModel(createTradeDto);
     return await createdTrade.save();
   }
@@ -18,9 +18,9 @@ export class TradeService {
     await createdTrade.save();
   }
 
-  async findAll(): Promise<Trade[]> {
+/*   async findAll(): Promise<Trade[]> {
     return await this.tradeModel.find().exec();
-  }
+  } */
 
   async getTradeByPeriod(startDate: number, endDate: number, asset: string): Promise<Trade[]> {
     return await this.tradeModel.find({ time: { $gte: startDate, $lt: endDate }, pair: {$regex: asset, $options: 'm'} },

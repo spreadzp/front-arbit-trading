@@ -7,10 +7,10 @@ import { ExchangeData } from './../common/models/exchangeData';
 import { Trade } from './../common/models/trade';
 import { OrderBookService } from './../db/orderBook/orderBook.service';
 import { StateTrading } from './../common/models/stateTrading';
-const emoji = require('node-emoji');
 import { ForexLoader } from './forex-loader';
 import { SERVER_CONFIG } from './../../server.constants';
 dotenv.config();
+//  const emoji = require('node-emoji');
 
 let result;
 let responseForexResource: { responseContent: { body: number } };
@@ -34,7 +34,6 @@ export class Parser {
         } else {
             if (responseForexResource.responseContent !== undefined) {
                 const prices = responseForexResource.responseContent.body;
-                //console.log('prices :', prices);
                 fiatPrices = this.forexLoader.fiatParser(prices);
             }
         }
@@ -146,24 +145,13 @@ export class Parser {
     }
     unblockTradingPair(trade: any) {
         if (this.stateTrading.length) {
-            for (const tradeItem of this.stateTrading) {
-                if (trade.typeOrder === 'sell') {
-                    if (tradeItem.arbitOrderId === trade.idOrder
-                       // && tradeItem.typeOrder === 'buy'
-                    ) {
-                        tradeItem.canTrade = true;
-                    }
+            this.stateTrading.forEach((tradeItem, index, array) => {
+                if (tradeItem.typeOrder === trade.typeOrder && tradeItem.arbitOrderId === trade.arbitOrderId) {
+                        this.stateTrading[index].canTrade = true;
                 }
-                if (trade.typeOrder === 'buy') {
-                    if (tradeItem.arbitOrderId === trade.idOrder
-                        //&& tradeItem.typeOrder === 'sell'
-                    ) {
-                        tradeItem.canTrade = true;
-                    }
-                }
-            }
+              });
+            this.stateTrading = this.stateTrading.filter(item => !item.canTrade);
         }
-        this.stateTrading = this.stateTrading.filter(item => !item.canTrade);
     }
 
     getOppositeOrder(arbitId: string, typeOrderDone: string): StateTrading {
@@ -242,7 +230,6 @@ export class Parser {
     getSocket(data: any) {
         const hostClient = data.host;
         const portClient = data.port;
-       // console.log(hostClient, portClient);
     }
 
     makeOrders(): Order[] {
@@ -253,7 +240,7 @@ export class Parser {
                     const newOrderBookData: any = {
                         exchangeName: iterator.exchange, pair: iterator.pair,
                         bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,
-                         askVolume: iterator.askVolumes, time: Date.now(),
+                        askVolume: iterator.askVolumes, time: Date.now(),
                     };
                     this.orderBooksService.addNewData(newOrderBookData);
                 }
@@ -274,20 +261,15 @@ export class Parser {
     }
 
     showData() {
-       /*  console.log('');
-        console.log('');
-        console.log('======================================================================='); */
         result = this.getCurrentPrice();
         connectedExhanges = result.filter(this.checkConnectedExchanges);
         const failExchangePrises = result.filter(this.isDisonnectedBot);
-        /*  if (failExchangePrises.length) {
+        /*   if (failExchangePrises.length) {
              console.table(`${emoji.get('white_frowning_face')} Disconnected bots`, failExchangePrises);
              console.log(`${emoji.get('hammer_and_pick')}  <---------------------------------------------->  ${emoji.get('hammer_and_pick')}`);
          }
-         console.log('');
          console.table(result);
-         console.log('');
-         console.log(`@@@@@@@@@@  BALANCE = ${currentBalance}BTC VOLUME = ${currentVolume}`); */
+         console.log(`  @@@@@@@@@@  BALANCE = ${currentBalance}BTC VOLUME = ${currentVolume}`); */
     }
 
     getCurrentPrice(): ExchangeData[] {
@@ -316,9 +298,7 @@ export class Parser {
                 currentVolume += data.volume;
                 currentBalance -= priceConfirmed * data.volume;
             } else {
-                console.log('');
-                console.log(`/@---@/ !! Arbitrage  order for ${data.typeOrder} # ${data.arbitrageId} not fulfilled!!!!`);
-                console.log('');
+                console.log(`/@---@Arbitrage  order for ${data.typeOrder} # ${data.arbitrageId} not fulfilled!!!!`);
             }
         }
     }
@@ -340,7 +320,6 @@ export class Parser {
         function findSellExchange(data: any) {
             return data.bids === minSellPrise;
         }
-        //console.log(marketSpread, +SERVER_CONFIG.percentProfit);
         if (sellExchange && buyExchange && marketSpread > +SERVER_CONFIG.percentProfit) {
 
             const buyForexPair: string = this.defineCurrentForexPair(buyExchange.pair);
@@ -357,7 +336,7 @@ export class Parser {
             const sellerOrder: any = {
                 pair: sellExchange.pair,
                 exchange: sellExchange.exchange,
-                price: sellPrice,
+                price: sellPrice * 0.999,
                 volume: Number(SERVER_CONFIG.tradeVolume),
                 typeOrder: 'sell',
                 fee: +SERVER_CONFIG.fee,
@@ -371,7 +350,7 @@ export class Parser {
             const buyerOrder: any = {
                 pair: buyExchange.pair,
                 exchange: buyExchange.exchange,
-                price: buyPrice,
+                price: buyPrice * 1.001,
                 volume: +SERVER_CONFIG.tradeVolume,
                 typeOrder: 'buy',
                 fee: +SERVER_CONFIG.fee,
@@ -391,21 +370,20 @@ export class Parser {
         sellerOrder: Order, buyerOrder: Order,
         sellExchange: any, marketSpread: number, buyExchange: any): Order[] {
         const ordersBot: Order[] = [];
-        //if (currentVolume === 0 && sellerOrder && buyerOrder) {
         if (sellerOrder && buyerOrder) {
             ordersBot.push(sellerOrder);
             ordersBot.push(buyerOrder);
             console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange}
              ${sellerOrder.price} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`);
         }
-       /*  if (currentVolume > 0) {
-            ordersBot.push(sellerOrder);
-            console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}  spread: ${marketSpread}%`);
-        }
-        if (currentVolume < 0) {
-            ordersBot.push(buyerOrder);
-            console.log(`pair ${buyExchange.pair} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`);
-        } */
+        /* if (currentVolume > 0) {
+             ordersBot.push(sellerOrder);
+             console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}  spread: ${marketSpread}%`);
+         }
+         if (currentVolume < 0) {
+             ordersBot.push(buyerOrder);
+             console.log(`pair ${buyExchange.pair} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`);
+         } */
         return ordersBot;
     }
 
@@ -413,8 +391,8 @@ export class Parser {
         if (data.status) {
             return false;
         } else {
-           /*  console.error(`${emoji.get('fire')}<---------------------------------------------->${emoji.get('fire')}`);
-            console.log(`from ${data.exchange} old data ${data.pair}, try reconnect ${data.host}:${data.port} ${emoji.get('exclamation')}`); */
+            /*     console.error(`${emoji.get('fire')}<---------------------------------------------->${emoji.get('fire')}`);
+             console.log(`from ${data.exchange} old data ${data.pair}, try reconnect ${data.host}:${data.port} ${emoji.get('exclamation')}`); */
             return true;
         }
     }

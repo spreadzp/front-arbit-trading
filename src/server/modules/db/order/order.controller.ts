@@ -14,12 +14,6 @@ export class OrderController {
     this.ordersService.create(orderDto);
   }
 
-  @Get('all')
-  async findAll(): Promise<Order[]> {
-    const orders = await this.ordersService.findAll();
-    return orders;
-  }
-
   @Get('find/')
   async getOrderByPeriod(@Request() req: any): Promise<Order[]> {
     const orders = await this.ordersService.getOrderByPeriod(
@@ -29,7 +23,7 @@ export class OrderController {
 
   @Post('save')
   async saveNew(@Body() data: Order) {
-    const order = await this.ordersService.addNewData(data);
+    const order = await this.ordersService.addNewOrder(data);
   }
 
   @Get('**')
