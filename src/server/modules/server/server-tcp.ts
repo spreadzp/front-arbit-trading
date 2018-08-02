@@ -31,19 +31,20 @@ export class ServerTcpBot {
 
     passTradeToDB(message: any) {
         const trades = this.parser.parseTrades(message);
-        const trade = {
-            exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
-            idOrder: message.payload.params[0], exchOrderId: '', time: ''
-        };
-        this.parser.unblockTradingPair(trade);
         if (trades.length) {
             for (const trade of trades) {
-              this.tradeService.addNewData(trade);
+                this.parser.subTradedVolume(trade);
+                this.tradeService.addNewData(trade);
+                let newOrder;
+                if (this.parser.orderFullFilled(trade)) {
+                    newOrder = this.parser.makeOrders();
+                } else {
+                    newOrder = this.parser.makePartialOrder(trade);
+                }
+                if (newOrder.length) {
+                    this.sendOrdersToBot(newOrder);
+                }
             }
-        }
-        const orders = this.parser.makeOrders();
-        if (orders) {
-            this.sendOrdersToBot(orders);
         }
     }
     createTcpServer() {
@@ -62,12 +63,6 @@ export class ServerTcpBot {
                             exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
                             arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
                         };
-                        this.parser.unblockTradingPair(trade);
-                        const orders = this.parser.makeOrders();
-                        if (orders) {
-                            this.sendOrdersToBot(orders);
-                            this.startFlag = false;
-                        }
                     }
                     if (message.payload.params[3] === 'open') {
                         const trade = {
@@ -81,7 +76,6 @@ export class ServerTcpBot {
                             exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
                             arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
                         };
-                        this.parser.unblockTradingPair(trade);
                     }
                 }
                 if (message.type === 'notification' && message.payload.method === 'resCheckOrder') {
@@ -109,7 +103,7 @@ export class ServerTcpBot {
         };
     }
 
-    private cancelOrder(trade: any) {
+   /*  private cancelOrder(trade: any) {
         const type = trade.typeOrder;
         return this.orderService.findOrderById(trade.arbitOrderId, type)
             .then((order) => {
@@ -121,7 +115,7 @@ export class ServerTcpBot {
                     //   this.startClient(oppositeCheckOrder);
                 }
             });
-    }
+    } */
     private checkOrder(trade: any) {
         const type = trade.typeOrder;
         return this.orderService.findOrderById(trade.arbitrageId, type)
@@ -136,7 +130,7 @@ export class ServerTcpBot {
             });
     }
 
-    private cancelOppositeArbitOrder(trade: any) {
+    /* private cancelOppositeArbitOrder(trade: any) {
         const type = trade.typeOrder === 'sell' ? 'buy' : 'sell';
         return this.orderService.findOrderById(trade.arbitrageId, type)
             .then((order) => {
@@ -148,9 +142,9 @@ export class ServerTcpBot {
                     this.startClient(oppositeCheckOrder);
                 }
             });
-    }
+    } */
 
-    private requestBalanceArbitId(trade: Trade) {
+    /* private requestBalanceArbitId(trade: Trade) {
         const oppositeArbitOrder = this.parser.getOppositeOrder(trade.arbitrageId, trade.typeOrder);
         if (oppositeArbitOrder) {
             const oppositeCheckOrder = {
@@ -159,7 +153,7 @@ export class ServerTcpBot {
             };
             this.startClient(oppositeCheckOrder);
         }
-    }
+    } */
     stopTcpServer() {
         this.server.close();
         console.log('Tcp server stoped');
@@ -181,10 +175,10 @@ export class ServerTcpBot {
                     serverPort: currentOrder.port, host: currentOrder.host,
                     order: currentOrder,
                 };
-                const enableTrading = this.parser.accessTrading(currentOrder);
-                console.log('enableTrading', enableTrading);
-                //
-                if (enableTrading && parametersOrder.order.price > 0) {
+               /*  const enableTrading = this.parser.accessTrading(currentOrder);
+                console.log('enableTrading', enableTrading); */
+                // enableTrading &&
+                if (parametersOrder.order.price > 0) {
                     this.startClient(parametersOrder);
                     this.orderService.addNewOrder(currentOrder);
                     this.parser.setStatusTrade(currentOrder);

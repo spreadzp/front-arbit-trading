@@ -10,14 +10,9 @@ import { StateTrading } from './../common/models/stateTrading';
 import { ForexLoader } from './forex-loader';
 import { SERVER_CONFIG } from './../../server.constants';
 dotenv.config();
-//  const emoji = require('node-emoji');
-
-let result;
 let responseForexResource: { responseContent: { body: number } };
 let fiatPrices: [any][number];
-let connectedExhanges;
-let currentBalance = 0;
-let currentVolume = 0;
+//let currentVolume = 0;
 
 @Controller()
 export class Parser {
@@ -47,7 +42,10 @@ export class Parser {
     }
     parseSentOrder(data: any) {
         const responseOrderData = data.payload.params[0];
-        this.defineStateBalance(responseOrderData);
+        if (!fiatPrices) {
+            this.getForexPrices();
+        }
+        //this.defineStateBalance(responseOrderData);
     }
     calculateAskBid(newPrices: { exchangePair: any, orderBook: any, host: string, port: number }) {
         let currentForexPair: string, bids, asks;
@@ -143,20 +141,72 @@ export class Parser {
         }
         return { bidsNewOrder, asksNewOrder, hostNewOrder, portNewOrder, createdExchangeField };
     }
-    unblockTradingPair(trade: any) {
+    /* unblockTradingPair(trade: any) {
         if (this.stateTrading.length) {
             this.stateTrading.forEach((tradeItem, index, array) => {
-                if (tradeItem.typeOrder === trade.typeOrder && tradeItem.arbitOrderId === trade.arbitOrderId) {
-                        this.stateTrading[index].canTrade = true;
+                if (tradeItem.typeOrder === trade.typeOrder && tradeItem.arbitrageId === trade.arbitOrderId) {
+                    this.stateTrading[index].canTrade = true;
                 }
-              });
+            });
             this.stateTrading = this.stateTrading.filter(item => !item.canTrade);
         }
+    } */
+
+    orderFullFilled(trade: any) {
+        let fullfilledOrder = false;
+        let fullfilledOppositeOrder = false;
+        if (this.stateTrading.length) {
+            this.stateTrading.forEach((tradeItem, index, array) => {
+                if (tradeItem.arbitrageId === trade.arbitrageId && tradeItem.typeOrder === trade.typeOrder) {
+                    if (this.stateTrading[index].percentFullFilled === 1) {
+                        fullfilledOrder = true;
+                    }
+                }
+                if (tradeItem.arbitrageId === trade.arbitrageId && tradeItem.typeOrder !== trade.typeOrder) {
+                    if (this.stateTrading[index].percentFullFilled === 1) {
+                        fullfilledOppositeOrder = true;
+                    }
+                }
+            });
+        }
+        console.log('orderFullFilled=', fullfilledOrder, fullfilledOppositeOrder);
+        if (fullfilledOrder && fullfilledOppositeOrder) {
+            const currentTrades = this.stateTrading.filter((currentTrade: StateTrading) => {
+                if (trade.arbitrageId === !currentTrade.arbitrageId && currentTrade.percentFullFilled !== 1) {
+                    return currentTrade;
+                }
+            });
+        }
+        return fullfilledOrder && fullfilledOppositeOrder;
     }
+
+    subTradedVolume(trade: any) {
+        if (this.stateTrading.length) {
+            this.stateTrading.forEach((tradeItem, index, array) => {
+                if (tradeItem.typeOrder === trade.typeOrder && tradeItem.arbitrageId === trade.arbitrageId) {
+                    this.stateTrading[index].percentFullFilled += trade.volume / this.stateTrading[index].volume;
+                    console.log('+++  = ', this.stateTrading[index].percentFullFilled, trade.volume, this.stateTrading[index].volume);
+                }
+            });
+            //this.changeCurrentVolume(trade.arbitrageId);
+        }
+
+    }
+    /*  changeCurrentVolume(arbitId: string): void {
+         for (const trade of this.stateTrading) {
+             if (trade.arbitrageId === arbitId && trade.typeOrder === 'sell') {
+                 currentVolume -= trade.volume;
+             }
+             if (trade.arbitrageId === arbitId && trade.typeOrder === 'buy') {
+                 currentVolume += trade.volume;
+             }
+         }
+         console.log('currentVolume=', currentVolume);
+     } */
 
     getOppositeOrder(arbitId: string, typeOrderDone: string): StateTrading {
         for (const order of this.stateTrading) {
-            if (order.arbitOrderId === arbitId && order.typeOrder !== typeOrderDone) {
+            if (order.arbitrageId === arbitId && order.typeOrder !== typeOrderDone) {
                 return order;
             }
         }
@@ -178,6 +228,17 @@ export class Parser {
 
     setStatusTrade(order: Order) {
         let newOrderFlag = true;
+        const newOrder: StateTrading = {
+            exchange: order.exchange,
+            pair: order.pair,
+            typeOrder: order.typeOrder,
+            volume: order.volume,
+            percentFullFilled: 0,
+            canTrade: false,
+            arbitrageId: order.arbitrageId,
+            host: order.host,
+            port: order.port,
+        };
         if (this.stateTrading.length) {
             for (const tradeItem of this.stateTrading) {
                 if (tradeItem.exchange === order.exchange
@@ -189,27 +250,9 @@ export class Parser {
                 }
             }
             if (newOrderFlag) {
-                const newOrder: StateTrading = {
-                    exchange: order.exchange,
-                    pair: order.pair,
-                    typeOrder: order.typeOrder,
-                    canTrade: false,
-                    arbitOrderId: order.arbitrageId,
-                    host: order.host,
-                    port: order.port,
-                };
                 this.stateTrading.push(newOrder);
             }
         } else {
-            const newOrder: StateTrading = {
-                exchange: order.exchange,
-                pair: order.pair,
-                typeOrder: order.typeOrder,
-                canTrade: false,
-                arbitOrderId: order.arbitrageId,
-                host: order.host,
-                port: order.port,
-            };
             this.stateTrading.push(newOrder);
         }
     }
@@ -235,21 +278,46 @@ export class Parser {
     makeOrders(): Order[] {
         if (this.exchangeData) {
             const currentOrderBooks = this.fetchOrderBook();
-            for (const iterator of currentOrderBooks) {
-                if (iterator.bids !== 0 && iterator.asks !== 0) {
-                    const newOrderBookData: any = {
-                        exchangeName: iterator.exchange, pair: iterator.pair,
-                        bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,
-                        askVolume: iterator.askVolumes, time: Date.now(),
-                    };
-                    this.orderBooksService.addNewData(newOrderBookData);
+            if (currentOrderBooks) {
+                for (const iterator of currentOrderBooks) {
+                    if (iterator.bids !== 0 && iterator.asks !== 0) {
+                        const newOrderBookData: any = {
+                            exchangeName: iterator.exchange, pair: iterator.pair,
+                            bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,
+                            askVolume: iterator.askVolumes, time: Date.now(),
+                        };
+                        this.orderBooksService.addNewData(newOrderBookData);
+                    }
                 }
+                return this.defineSellBuy(currentOrderBooks);
             }
-            this.showData();
-
-            return this.defineSellBuy(currentOrderBooks);
         }
     }
+    /*  makeOppositeOrder(trade: any): Order {
+         if (this.stateTrading.length) {
+             this.stateTrading.forEach((tradeItem, index, array) => {
+                 if (tradeItem.typeOrder !== trade.typeOrder && tradeItem.arbitOrderId === trade.arbitOrderId) {
+                     this.stateTrading[index].canTrade = true;
+                 }
+             });
+             this.stateTrading = this.stateTrading.filter(item => !item.canTrade);
+         }
+         if (this.exchangeData) {
+             const currentOrderBooks = this.fetchOrderBook();
+             for (const iterator of currentOrderBooks) {
+                 if (iterator.bids !== 0 && iterator.asks !== 0) {
+                     const newOrderBookData: any = {
+                         exchangeName: iterator.exchange, pair: iterator.pair,
+                         bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,
+                         askVolume: iterator.askVolumes, time: Date.now(),
+                     };
+                     this.orderBooksService.addNewData(newOrderBookData);
+                 }
+             }
+ 
+             return this.defineSellBuy(currentOrderBooks);
+         }
+     } */
 
     fetchOrderBook(): ExchangeData[] {
         return this.exchangeData.map(data => ({
@@ -258,18 +326,6 @@ export class Parser {
             currentStatus: data.currentStatus, host: data.host, port: data.port, status: true,
             spread: 0,
         }));
-    }
-
-    showData() {
-        result = this.getCurrentPrice();
-        connectedExhanges = result.filter(this.checkConnectedExchanges);
-        const failExchangePrises = result.filter(this.isDisonnectedBot);
-        /*   if (failExchangePrises.length) {
-             console.table(`${emoji.get('white_frowning_face')} Disconnected bots`, failExchangePrises);
-             console.log(`${emoji.get('hammer_and_pick')}  <---------------------------------------------->  ${emoji.get('hammer_and_pick')}`);
-         }
-         console.table(result);
-         console.log(`  @@@@@@@@@@  BALANCE = ${currentBalance}BTC VOLUME = ${currentVolume}`); */
     }
 
     getCurrentPrice(): ExchangeData[] {
@@ -284,7 +340,7 @@ export class Parser {
         if (!fiatPrices) {
             this.getForexPrices();
         }
-        if (fiatPrices) {
+        /* if (fiatPrices) {
             const currentForexPair = this.getPriceFiatForex(data.pair);
             const priceConfirmed = (currentForexPair !== undefined) ? (currentForexPair === 'USDJPY') ?
                 data.price / +fiatPrices[currentForexPair][0] :
@@ -292,19 +348,75 @@ export class Parser {
                 data.price;
             if (data.typeOrder === 'sell' && data.fulfill) {
                 currentVolume -= data.volume;
-                currentBalance += priceConfirmed * data.volume;
+                //currentBalance += priceConfirmed * data.volume;
             }
             if (data.typeOrder === 'buy' && data.fulfill) {
                 currentVolume += data.volume;
-                currentBalance -= priceConfirmed * data.volume;
+                //currentBalance -= priceConfirmed * data.volume;
             } else {
                 console.log(`/@---@Arbitrage  order for ${data.typeOrder} # ${data.arbitrageId} not fulfilled!!!!`);
             }
-        }
+        } */
     }
 
     defineCurrentForexPair(cryptoPair: string) {
         return this.getPriceFiatForex(cryptoPair);
+    }
+
+    getCurrentPriceExchange(exchange: string, pair: string, typeTrade: string) {
+        const exchangeItem = this.getCurrentPrice().filter((exchangeData: ExchangeData) => {
+            if (exchangeData.exchange === exchange && exchangeData.pair === pair) {
+                return exchangeData;
+            }
+        });
+        if (exchangeItem.length && typeTrade === 'sell') {
+            return exchangeItem[0].bids;
+        }
+        if (exchangeItem.length && typeTrade === 'buy') {
+            return exchangeItem[0].asks;
+        }
+    }
+
+    makePartialOrder(partialTrade: any) {
+        const oppositePartialOrder: any[] = [];
+        const orderType = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
+        const partialStartOrder = this.stateTrading.find((currentTrade) => {
+            return currentTrade.arbitrageId === partialTrade.arbitrageId && currentTrade.typeOrder === partialTrade.typeOrder;
+        });
+        for (const trade of this.stateTrading) {
+            console.log('this.stateTrading', this.stateTrading);
+            if (trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder !== partialTrade.typeOrder
+                && trade.percentFullFilled < 1) {
+                const tradeVolume = trade.volume * (partialStartOrder.percentFullFilled - trade.percentFullFilled);
+                console.log(' tradeVolume = ', tradeVolume, trade.volume, partialStartOrder.percentFullFilled, trade.percentFullFilled);
+                const order = {
+                    pair: partialTrade.pair,
+                    exchange: trade.exchange,
+                    price: this.getCurrentPriceExchange(trade.exchange, trade.pair, orderType),
+                    volume: tradeVolume,
+                    typeOrder: orderType,
+                    deviationPrice: +SERVER_CONFIG.deviationPrice,
+                    fee: +SERVER_CONFIG.fee,
+                    host: trade.host,
+                    port: trade.port,
+                    arbitrageId: partialTrade.arbitrageId,
+                    time: Date.now().toString(),
+                    statusOrder: 'formed'
+                };
+                oppositePartialOrder.push(order);
+            } else {
+                this.makeOrders();
+            }
+        }
+        console.log('partialTrade=', partialTrade, 'oppositePartialOrder=', oppositePartialOrder);
+        return oppositePartialOrder;
+        // +SERVER_CONFIG.percentProfit
+    }
+    definePriceByForex(pair: string, price: number) {
+        return (pair !== undefined) ? (pair === 'USDJPY') ?
+            price * +fiatPrices[pair][0] :
+            price / +fiatPrices[pair][0] :
+            price;
     }
 
     defineSellBuy(result: ExchangeData[]) {
@@ -321,22 +433,15 @@ export class Parser {
             return data.bids === minSellPrise;
         }
         if (sellExchange && buyExchange && marketSpread > +SERVER_CONFIG.percentProfit) {
-
             const buyForexPair: string = this.defineCurrentForexPair(buyExchange.pair);
-            const buyPrice = (buyForexPair !== undefined) ? (buyForexPair === 'USDJPY') ?
-                maxBuyPrise * +fiatPrices[buyForexPair][0] :
-                maxBuyPrise / +fiatPrices[buyForexPair][0] :
-                maxBuyPrise;
+            const buyPrice = this.definePriceByForex(buyForexPair, maxBuyPrise);
             const sellForexPair = this.defineCurrentForexPair(sellExchange.pair);
-            const sellPrice = (sellForexPair !== undefined) ? (sellForexPair === 'USDJPY') ?
-                minSellPrise * +fiatPrices[sellForexPair][0] :
-                minSellPrise / +fiatPrices[sellForexPair][0] :
-                minSellPrise;
+            const sellPrice = this.definePriceByForex(sellForexPair, minSellPrise);
             const arbitrageUnicId = UUID.UUID();
             const sellerOrder: any = {
                 pair: sellExchange.pair,
                 exchange: sellExchange.exchange,
-                price: sellPrice * 0.999,
+                price: sellPrice,
                 volume: Number(SERVER_CONFIG.tradeVolume),
                 typeOrder: 'sell',
                 fee: +SERVER_CONFIG.fee,
@@ -350,7 +455,7 @@ export class Parser {
             const buyerOrder: any = {
                 pair: buyExchange.pair,
                 exchange: buyExchange.exchange,
-                price: buyPrice * 1.001,
+                price: buyPrice,
                 volume: +SERVER_CONFIG.tradeVolume,
                 typeOrder: 'buy',
                 fee: +SERVER_CONFIG.fee,
@@ -371,18 +476,22 @@ export class Parser {
         sellExchange: any, marketSpread: number, buyExchange: any): Order[] {
         const ordersBot: Order[] = [];
         if (sellerOrder && buyerOrder) {
-            ordersBot.push(sellerOrder);
-            ordersBot.push(buyerOrder);
-            console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange}
-             ${sellerOrder.price} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`);
+            this.setStatusTrade(sellerOrder);
+            this.setStatusTrade(buyerOrder);
+            /*  ordersBot.push(sellerOrder);
+             ordersBot.push(buyerOrder); */
+            /*  console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange}
+              ${sellerOrder.price} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`); */
         }
-        /* if (currentVolume > 0) {
-             ordersBot.push(sellerOrder);
-             console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}  spread: ${marketSpread}%`);
-         }
+        // if (currentVolume >= 0) {
+        ordersBot.push(sellerOrder);
+        console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}
+              spread: ${marketSpread}%`);
+        /*  }
          if (currentVolume < 0) {
              ordersBot.push(buyerOrder);
-             console.log(`pair ${buyExchange.pair} buy: ${buyerOrder.exchange} ${buyerOrder.price}  spread: ${marketSpread}%`);
+             console.log(`pair ${buyExchange.pair} buy: ${buyerOrder.exchange} ${buyerOrder.price}
+              spread: ${marketSpread}%`);
          } */
         return ordersBot;
     }
