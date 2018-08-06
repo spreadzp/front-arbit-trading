@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+import { interval } from 'rxjs';
 import { UserService } from './../../../services/user.service';
 
 import { Component, OnInit } from '@angular/core';
@@ -13,30 +15,44 @@ export class UserComponent implements OnInit {
   price: string;
   items: ExchangeData[];
   req: any[];
+  source: any;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.getData<ExchangeData[]>('sever-tcp/current-price')
-      .subscribe(data => {
-        this.items = data;
-        console.log('this.items :', this.items);
-      });
+    this.source = interval(1000);
+    this.updateDate();
   }
 
   addItem(name: string, price: string) {
     //this.userService.addData(name, price);
   }
+
+  updateDate() {
+    const t = this.source.subscribe((x: any) => {
+      this.fetchData();
+      console.log('x :', x);
+    });
+  }
+
+  fetchData() {
+    this.userService.getData<ExchangeData[]>('sever-tcp/current-price')
+      .subscribe(data => {
+        this.items = data;
+        console.log('this.items  :', this.items);
+      });
+  }
+
   startTcp() {
     this.userService.startTcp()
-    .subscribe(data => {
-      this.req = data;
-      console.log('data :', data);
-    });
+      .subscribe(data => {
+        this.req = data;
+        console.log('data :', data);
+      });
   }
   stopTcp() {
     this.userService.stopTcp()
-    .subscribe(data => {
-      this.req = data;
+      .subscribe(data => {
+        this.req = data;
         console.log('data :', data);
       });
   }

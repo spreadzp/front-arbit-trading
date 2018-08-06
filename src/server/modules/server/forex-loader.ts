@@ -22,7 +22,6 @@ export class ForexLoader {
             forexPrices[data[iterator].symbol] = [data[iterator].bid,
             data[iterator].ask, data[iterator].price];
         }
-        // console.log('forexPrices :', forexPrices);
         return forexPrices;
     }
 }

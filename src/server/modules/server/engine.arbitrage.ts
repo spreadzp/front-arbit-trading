@@ -3,7 +3,6 @@ export class EngineArbitrage {
     constructor() { }
 
     getBalance() { }
-
     countBalance() {}
     definePriceSell() {}
     definePriceBuy() {}
