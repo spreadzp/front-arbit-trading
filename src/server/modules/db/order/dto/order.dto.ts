@@ -6,6 +6,9 @@ export class OrderDto {
     readonly pair: string;
     readonly price: number;
     readonly volume: number;
+    readonly size: number;
+    readonly origSize: number;
+    readonly remainingSize: number;
     readonly typeOrder: string;
     readonly fee: number;
     readonly deviationPrice: number;

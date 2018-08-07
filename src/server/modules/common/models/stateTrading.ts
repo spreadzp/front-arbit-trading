@@ -5,7 +5,9 @@ export interface StateTrading {
     arbitrageId: string;
     percentFullFilled: number;
     volume: number;
-    canTrade: boolean;
+    size: number;
+    origSize: number;
+    remainingSize: number;
     host: string;
     port: number;
 }

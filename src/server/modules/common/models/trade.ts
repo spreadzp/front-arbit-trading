@@ -5,6 +5,9 @@ export interface Trade extends Document {
     pair: string;
     price: number;
     volume: number;
+    size: number;
+    origSize: number;
+    remainingSize: number;
     typeOrder: string;
     arbitrageId: string;
     exchOrderId: string;

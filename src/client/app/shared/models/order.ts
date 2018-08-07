@@ -3,6 +3,9 @@ export interface Order {
     pair: string;
     price: number;
     volume: number;
+    size: number;
+    origSize: number;
+    remainingSize: number;
     typeOrder: string;
     fee: number;
     arbitrageId: string;

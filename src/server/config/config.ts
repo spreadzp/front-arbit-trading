@@ -42,7 +42,7 @@ const Config: IConfig = {
     forexPairs: 'EURUSD,GBPUSD,USDJPY',
     percentProfit: 0.1,
     deviationPrice: 0.1,
-    tradeVolume: 0.001,
+    tradeVolume: 1,
     fee: 0.01
 
   },

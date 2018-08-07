@@ -31,7 +31,7 @@ export class ServerTcpBot {
 
     passTradeToDB(message: any) {
         const trades = this.parser.parseTrades(message);
-        if (trades.length) {
+        if (trades) {
             for (const trade of trades) {
                 this.parser.subTradedVolume(trade);
                 this.tradeService.addNewData(trade);
@@ -41,7 +41,7 @@ export class ServerTcpBot {
                 } else {
                     newOrder = this.parser.makePartialOrder(trade);
                 }
-                if (newOrder.length) {
+                if (newOrder) {
                     this.sendOrdersToBot(newOrder);
                 }
             }
@@ -52,7 +52,7 @@ export class ServerTcpBot {
         this.server = new net.Server((socket: any) => {
             socket.on('message', (message: any) => {
                 if (message.type === 'notification'
-                && message.payload.method === 'trades' || message.payload.method === 'partial') {
+                && message.payload.method === 'trades' || message.payload.method === 'partial' || message.payload.method === 'done') {
                     this.passTradeToDB(message);
                 }
                 if (message.type === 'notification' && message.payload.method === 'statusOrder') {
@@ -68,6 +68,7 @@ export class ServerTcpBot {
                         this.checkOrder(trade);
                     }
                     if (message.payload.params[3] === 'done') {
+                        this.passTradeToDB(message);
                         const trade = {
                             exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
                             arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
@@ -93,7 +94,7 @@ export class ServerTcpBot {
         this.server.listen(SERVER_CONFIG.tcpPort);
         console.log(`Tcp server listen port ${SERVER_CONFIG.tcpPort}`);
 
-        // Enable authentication for server
+        //  Enable authentication for server
         this.server.getAuthenticator = () => {
             return (signature: string) => auth.verify(signature);
         };
@@ -129,7 +130,7 @@ export class ServerTcpBot {
     }
 
     sendOrdersToBot(orders: Order[]) {
-        if (orders.length) {
+        if (orders) {
             for (const currentOrder of orders) {
                 const parametersOrder = {
                     nameOrder: 'sendOrder',
@@ -139,7 +140,7 @@ export class ServerTcpBot {
                 if (parametersOrder.order.price > 0) {
                     this.startClient(parametersOrder);
                     this.orderService.addNewOrder(currentOrder);
-                    this.parser.setStatusTrade(currentOrder);
+                    // this.parser.setStatusTrade(currentOrder);
                 }
             }
         }
