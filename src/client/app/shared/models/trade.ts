@@ -7,7 +7,7 @@ export interface Trade {
     origSize: number;
     remainingSize: number;
     typeOrder: string;
-    idOrder: string;
+    arbitrageId: string;
     exchOrderId: string;
     time: string;
 }

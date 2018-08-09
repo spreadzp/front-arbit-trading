@@ -12,46 +12,32 @@ import * as frLocale from 'date-fns/locale/fr';
   styleUrls: ['./export.component.scss']
 })
 export class ExportComponent implements OnInit {
-  @ViewChild(MatDatepicker) startPicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepicker) endPicker: MatDatepicker<Date>;
-  @ViewChild('asset') asset: ElementRef;
+  asset: any;
   startDate: any;
   endDate: any;
   angular5Csv: Angular5Csv;
+  selected: { start: any, end: any };
   items: OrderBook[];
 
   constructor(private userService: UserService) { }
 
   ngOnInit() { }
-
-  public onStartDate(event: any): void {
-    this.startDate = new Date(event).valueOf();
-  }
-
-  public onEndDate(event: any): void {
-    this.endDate = new Date(event).valueOf();
-  }
-
-  public onAsset(event: any): void {
-    this.asset = event.valueOf();
-  }
-
   async download() {
-    if (this.startDate && this.endDate) {
-      const utcStartDate = Date.parse(this.startDate);
-      const utcEndDate = Date.parse(this.endDate);
+    if (this.selected.start && this.selected.start) {
+      const utcStartDate = Date.parse(this.selected.start);
+      const utcEndDate = Date.parse(this.selected.end);
       await this.userService.getData<OrderBook[]>(
         `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.items = data;
-          this.createCsv(this.items, this.startDate, this.endDate, this.asset.toString());
+          this.createCsv(this.items, utcStartDate, utcEndDate, this.asset.toString());
         });
     } else {
       alert('Введите даты поискового диапазона!');
     }
   }
 
-  createCsv(orderData: OrderBook[], startDate: string, endDate: string, asset: string) {
+  createCsv(orderData: OrderBook[], startDate: number, endDate: number, asset: string) {
     const stDate = new Date(startDate).toDateString();
     const finishfDate = new Date(endDate).toDateString();
     const chuckSize = 40000;

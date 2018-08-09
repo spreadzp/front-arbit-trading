@@ -10,7 +10,7 @@ export class ExchangeService {
     public exchangeCreated: EventEmitter<Exchange> = new EventEmitter();
     public arbitrageExchangeCreated: EventEmitter<ArbitrageExchange> = new EventEmitter();
     // public ingredientsChanged: EventEmitter<Ingredient[]> = new EventEmitter();
-
+    [propName: string]: any;
     private tradeLines: ArbitrageExchange[] = [
         {
             IdGroupArbitrage: 'BTC',
@@ -35,6 +35,7 @@ export class ExchangeService {
             status: 'Connect',
         }
     ];
+    percentTable = ['exchange', 'bid', 'ask'];
     headerTableNames = ['select', 'pair', 'exchange', 'memberOfExchange', 'tradeVolume', 'fee', 'deviation', 'serverName', 'status'];
     private exchanges: Exchange[] = [
         {
@@ -112,6 +113,10 @@ export class ExchangeService {
 
     public getCurrrentTradeLines(): Observable<ArbitrageExchange[]> {
         return  Observable.of(this.tradeLines);
+    }
+
+    public getHeaderTableNames(nameTable: string): Observable<string[]> {
+        return Observable.of(this[nameTable]);
     }
 
     public getHeaderTable(): Observable<string[]> {

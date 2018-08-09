@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material';
 
 interface ISection {
   title: string;
@@ -16,6 +17,8 @@ interface INav {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+
+
   nav: INav = {
     root: {title: 'General server', link: 'recipes'},
     sections: [
@@ -25,7 +28,8 @@ export class HeaderComponent implements OnInit {
       {title: 'Export', link: 'export'},
       {title: 'Order', link: 'order'},
       {title: 'Setting', link: 'setting'},
-      {title: 'Arbitrage', link: 'arbitrage'}
+      {title: 'Arbitrage', link: 'arbitrage'},
+      {title: 'Percent', link: 'percent'}
     ]
   };
 

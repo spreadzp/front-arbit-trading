@@ -10,9 +10,10 @@ import { EditGroupComponent } from './components/group-arbitrage/edit-group/edit
 import { GroupExchangeComponent } from './components/group-arbitrage/group-exchange/group-exchange.component';
 import { MatTableModule, MatPaginatorModule, MatSortModule, MatCheckboxModule, MatExpansionModule, MatFormFieldModule,
    MatSelectModule, MatInputModule} from '@angular/material';
+import { PercentExchangeComponent } from './components/percent-exchange/percent-exchange.component';
 @NgModule({
   declarations: [DropdownDirective, IngredientComponent, ExchangeComponent,
-    PairComponent, MemberComponent, ArbitrageExchangeComponent, GroupArbitrageComponent, EditGroupComponent, GroupExchangeComponent],
+    PairComponent, MemberComponent, ArbitrageExchangeComponent, GroupArbitrageComponent, EditGroupComponent, GroupExchangeComponent, PercentExchangeComponent],
   exports: [DropdownDirective, IngredientComponent, ExchangeComponent,
     PairComponent, MemberComponent, ArbitrageExchangeComponent,
     GroupArbitrageComponent],

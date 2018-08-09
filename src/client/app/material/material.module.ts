@@ -23,6 +23,8 @@ import {
   MatProgressSpinnerModule,
   MatRadioModule,
   MatRippleModule,
+  MatSidenav,
+  MatSidenavContainer,
   MatSelectModule,
   MatSidenavModule,
   MatSliderModule,
@@ -34,6 +36,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatMenuTrigger,
 } from '@angular/material';
 
 @NgModule({
@@ -91,12 +94,14 @@ import {
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatMenuTrigger,
     MatNativeDateModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
     MatRippleModule,
+    MatSidenavModule,
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,

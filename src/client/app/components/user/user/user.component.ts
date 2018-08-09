@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs/Observable';
 import { interval } from 'rxjs';
 import { UserService } from './../../../services/user.service';
 
@@ -21,10 +20,6 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     this.source = interval(1000);
     this.updateDate();
-  }
-
-  addItem(name: string, price: string) {
-    //this.userService.addData(name, price);
   }
 
   updateDate() {

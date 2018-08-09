@@ -15,12 +15,12 @@ import { ValidatorService } from '../../services/validatorService';
 export class SettingComponent implements OnInit {
   displayedColumns = ['name', 'age', 'actionsColumn'];
 
-  @Input() personList: Exchange[];
+ /*  @Input() personList: Exchange[];
   @Output() personListChange = new EventEmitter<Exchange[]>();
 
   dataSource: TableDataSource<Exchange>;
   constructor(private personValidator: ValidatorService) { }
-
+ */
   ngOnInit() {
     /* this.dataSource = new TableDataSource<any>(this.personList, Person, this.personValidator);
 

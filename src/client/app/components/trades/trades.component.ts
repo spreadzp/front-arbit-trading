@@ -10,9 +10,8 @@ import { MatDatepicker, MatDatepickerToggle } from '@angular/material';
   styleUrls: ['./trades.component.scss']
 })
 export class TradesComponent implements OnInit {
-  @ViewChild(MatDatepicker) startPicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepicker) endPicker: MatDatepicker<Date>;
-  @ViewChild('asset') asset: ElementRef;
+  asset: any;
+  selected: { start: any, end: any };
   angular5Csv: Angular5Csv;
   startDate: any;
   endDate: any;
@@ -24,44 +23,28 @@ export class TradesComponent implements OnInit {
     const interval = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
     const startOfDay = Math.floor(Date.now() / interval) * interval;
     const endOfDay = Date.now(); //let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
-    this.userService.getData<Trade[]>(`trades/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
+   this.userService.getData<Trade[]>(`trades/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
       .subscribe(data => {
         this.items = data;
       });
   }
 
-  public onStartDate(event: any): void {
-    this.startDate = new Date(event).valueOf();
-    console.log('this.startDate :', this.startDate );
-  }
-
-  public onEndDate(event: any): void {
-    this.endDate = new Date(event).valueOf();
-    console.log('this.endDate :', this.endDate);
-  }
-
-  public onAsset(event: any): void {
-    this.asset = event.valueOf();
-  }
-
   async download() {
-    console.log(this.startDate, this.endDate);
-    if (this.startDate && this.endDate) {
-
+    if (this.selected.start && this.selected.start) {
       const utcStartDate = Date.parse(this.startDate);
       const utcEndDate = Date.parse(this.endDate);
       console.log(utcStartDate, utcEndDate);
       await this.userService.getData<Trade[]>(`trades/find/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
       .subscribe(data => {
         this.items = data;
-        this.createCsv(this.items, this.startDate, this.endDate, this.asset.toString());
+        this.createCsv(this.items, utcStartDate, utcEndDate, this.asset.toString());
       });
     } else {
       alert('Введите даты поискового диапазона!');
     }
   }
 
-  createCsv(orderData: Trade[], startDate: string, endDate: string, asset: string) {
+  createCsv(orderData: Trade[], startDate: number, endDate: number, asset: string) {
     const stDate = new Date(startDate).toDateString();
     const finishfDate = new Date(endDate).toDateString();
     const chuckSize = 40000;

@@ -33,6 +33,7 @@ export class ServerTcpBot {
         const trades = this.parser.parseTrades(message);
         if (trades) {
             for (const trade of trades) {
+                this.orderService.updateStatusOrder(trade.arbitrageId, trade.typeOrder, trade.exchOrderId, 'done', '');
                 this.parser.subTradedVolume(trade);
                 this.tradeService.addNewData(trade);
                 let newOrder;
@@ -74,11 +75,19 @@ export class ServerTcpBot {
                             arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
                         };
                     }
+                    if (message.payload.params[3] === 'cancelled') {
+                        this.passTradeToDB(message);
+                        const trade = {
+                            exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
+                            arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
+                        };
+                    }
                 }
-                if (message.type === 'notification' && message.payload.method === 'resCheckOrder') {
+             /*    if (message.type === 'notification' && message.payload.method === 'resCheckOrder') {
                     const checkingOrder = JSON.parse(message.payload.params[0]);
                     console.log('+++///   ** @checkingOrder :', checkingOrder);
-                } else {
+                } */
+                 else {
                     const parsedMessage = this.parser.parseTcpMessage(message);
                     this.parser.calculateAskBid(parsedMessage);
                     if (this.startFlag) {

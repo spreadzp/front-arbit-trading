@@ -12,6 +12,7 @@ import { ExportComponent } from './components/export/export.component';
 import { OrderComponent } from './components/order/order.component';
 import { SettingComponent } from './components/setting/setting.component';
 import { ArbitrageComponent } from './components/arbitrage/arbitrage.component';
+import { PercentExchangeComponent } from './shared/components/percent-exchange/percent-exchange.component';
 
 const appRoutes: Routes = [
   {
@@ -69,6 +70,10 @@ const appRoutes: Routes = [
   {
     path: 'arbitrage',
     component: ArbitrageComponent,
+  },
+  {
+    path: 'percent',
+    component: PercentExchangeComponent,
   },
   {
     path: '**',

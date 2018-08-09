@@ -32,11 +32,13 @@ import { MaterialModule } from './material/material.module';
 import { ServicesModule } from './services/services.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpModule } from '@angular/http';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgDatepickerModule } from 'ng2-datepicker';
 import { MatFormFieldModule, MatNativeDateModule, MatCheckboxModule, MatExpansionModule } from '@angular/material';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 
 @NgModule({
@@ -58,6 +60,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     SettingComponent,
     ArbitrageComponent,
     ArbitrageEditComponent,
+    SidenavComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -82,7 +85,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatCheckboxModule,
-    MatExpansionModule
+    MatExpansionModule,
+    NgxDaterangepickerMd
   ],
   exports: [MatCheckboxModule],
   bootstrap: [AppComponent]

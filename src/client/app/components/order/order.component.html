@@ -1,60 +1,53 @@
 <div class="panel">
-  <div class="form-inline">
+  <div class="form-inline"> 
     <mat-form-field color="accent">
-      <mat-label>Enter start date</mat-label>
-      <input matInput [matDatepicker]="startPicker" placeholder="Choose a date" [(ngModel)]="startDate">
-      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-      <mat-datepicker #startPicker [(ngModel)]="startDate" ngDefaultControl (selectedChanged)="onStartDate($event)"></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field color="accent">
-      <mat-label>Enter end date</mat-label>
-      <input matInput [matDatepicker]="endPicker" placeholder="Choose a date" [(ngModel)]="endDate">
-      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-      <mat-datepicker #endPicker color="primary" [(ngModel)]="endDate" ngDefaultControl (selectedChanged)="onEndDate($event)"></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field hintLabel="Max 4 characters">
-        <input matInput #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset">
-        <mat-hint align="end">{{input.value?.length || 0}}/4</mat-hint>
-    </mat-form-field>
-
+        <input type="text" matInput
+        ngxDaterangepickerMd
+        [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}"
+        startKey="start"
+        endKey="end"
+        [(ngModel)]="selected"
+        name="daterange" /> 
+    </mat-form-field> 
+        <input  #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset" > 
     <div class="form-group">
       <div class="col-md-offset-2 col-md-8">
         <button class="btn btn-default" (click)="download()">Save csv</button>
       </div>
     </div>
   </div>
-  <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>time</th>
-          <th>exchange</th>
-          <th>pair</th>
-          <th>price</th>
-          <th>fee</th>
-          <th>volume</th>
-          <th>type order</th>
-          <td>deviation Price</td> 
-          <th>id arbitrage order</th>
-          <th>id exchange order</th>
-          <th>Status order</th>
-          <th>reason</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let order of orders">
-          <td>{{order.time | date: 'mediumTime'}}</td>
-          <td>{{order.exchange}}</td>
-          <td>{{order.pair}}</td>
-          <td>{{order.price}}</td>
-          <td>{{order.fee}}</td>
-          <td>{{order.volume}}</td>
-          <td>{{order.typeOrder}}</td>
-          <td>{{order.deviationPrice}}</td> 
-          <td>{{order.arbitrageId}}</td>
-          <th>{{order.exchangeId}}</th>
-          <th>{{order.status}}</th>
-          <th>{{order.reason}}</th>
-        </tr>
-      </tbody>
-    </table>
+ <!--  <table class="table table-striped">
+    <thead>(ngModelChange)="choosedDate($event)"
+      <tr>
+        <th>time</th>
+        <th>exchange</th>
+        <th>pair</th>
+        <th>price</th>
+        <th>fee</th>
+        <th>volume</th>
+        <th>type order</th>
+        <td>deviation Price</td>
+        <th>id arbitrage order</th>
+        <th>id exchange order</th>
+        <th>Status order</th>
+        <th>reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{order.time | date: 'mediumTime'}}</td>
+        <td>{{order.exchange}}</td>
+        <td>{{order.pair}}</td>
+        <td>{{order.price}}</td>
+        <td>{{order.fee}}</td>
+        <td>{{order.volume}}</td>
+        <td>{{order.typeOrder}}</td>
+        <td>{{order.deviationPrice}}</td>
+        <td>{{order.arbitrageId}}</td>
+        <th>{{order.exchangeId}}</th>
+        <th>{{order.status}}</th>
+        <th>{{order.reason}}</th>
+      </tr>
+    </tbody>
+  </table>
+ -->

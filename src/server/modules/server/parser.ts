@@ -144,7 +144,9 @@ export class Parser {
             currentPrice;
     }
 
-    private fromUsdToFiatPrice(currentForexPair: any, currentPrice: any) {
+    private fromUsdToFiatPrice(exchangePair: any, currentPrice: any) {
+        const currentForexPair = this.getPriceFiatForex(exchangePair);
+        console.log('currentForexPair :', currentForexPair);
         if (currentForexPair && fiatPrices[currentForexPair]) {
             return (currentForexPair === 'USDJPY') ?
                 [[+currentPrice[0][0] * +fiatPrices[currentForexPair][0], 0]] :
@@ -171,9 +173,6 @@ export class Parser {
                 }
             });
         }
-        console.log('{{{{{{{before this.stateTrading :', this.stateTrading);
-        /* console.log('?  this.stateTrading', this.stateTrading);
-        console.log('orderFullFilled=', fullfilledOrder, fullfilledOppositeOrder); */
         if (fullfilledOrder && fullfilledOppositeOrder) {
             this.stateTrading = this.stateTrading.filter((currentTrade: StateTrading) => {
                 if (currentTrade.remainingSize !== 0) {
@@ -181,8 +180,6 @@ export class Parser {
                 }
             });
         }
-        console.log('{{{{{{{this.stateTrading :', this.stateTrading);
-        console.log('orderFullFilled=', fullfilledOrder && fullfilledOppositeOrder);
         return fullfilledOrder && fullfilledOppositeOrder;
 
     }
@@ -192,10 +189,8 @@ export class Parser {
             this.stateTrading.forEach((tradeItem, index, array) => {
                 if (tradeItem.typeOrder === trade.typeOrder && tradeItem.arbitrageId === trade.arbitrageId
                     && this.stateTrading[index].remainingSize >= +trade.size) {
-                    console.log('trade.volume, this.stateTrading[index].volume :', trade.volume, this.stateTrading[index].volume);
                     this.stateTrading[index].percentFullFilled += +trade.size / this.stateTrading[index].volume;
                     this.stateTrading[index].remainingSize -= +trade.size;
-                    console.log('this.stateTrading[index].remainingSize -= +trade.siz :', this.stateTrading[index].remainingSize, trade.size);
                 }
             });
             console.log('@@@@subTradedVolume this.stateTrading :', this.stateTrading);
@@ -322,9 +317,8 @@ export class Parser {
         let nextTrade: StateTrading;
         for (const trade of this.stateTrading) {
             if (trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder !== partialTrade.typeOrder
-                && trade.remainingSize <= 1) {
+                && trade.remainingSize > 0) {
                 tradeVolume = (partialStartOrder.origSize - partialStartOrder.remainingSize) - trade.remainingSize;
-                console.log(' tradeVolume  =  :', partialStartOrder.origSize, partialStartOrder.remainingSize, trade.remainingSize);
                 nextTrade = trade;
                 nextTrade.typeOrder = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
             } else if (trade.arbitrageId === partialTrade.arbitrageId
@@ -437,7 +431,6 @@ export class Parser {
         sellExchange: any, marketSpread: number, buyExchange: any): Order[] {
         const ordersBot: Order[] = [];
         if (sellerOrder && buyerOrder) {
-            console.log('sellerOrder && buyerOrder :', sellerOrder, buyerOrder);
             this.setStatusTrade(sellerOrder);
             this.setStatusTrade(buyerOrder);
         }
