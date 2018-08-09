@@ -1,5 +1,4 @@
-import { MatDatepicker } from '@angular/material';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from './../../services/user.service';
 import { Order } from './../../shared/models/order';
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
@@ -27,8 +26,7 @@ export class OrderComponent implements OnInit {
 
     this.userService.getData<Order[]>(`orders/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
       .subscribe(data => {
-        this.orders = data;
-        console.log('this.items :', this.orders);
+        this.orders = data; 
       });
     console.log('this.orders :', this.orders);
   }

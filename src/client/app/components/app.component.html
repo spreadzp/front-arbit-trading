@@ -1,7 +1,7 @@
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav" mode="side">
     <button (click)="showFiller = !showFiller" mat-raised-button>
-      Toggle extra text
+      Show menu
     </button>
     <div *ngIf="showFiller">
       <app-header></app-header>
@@ -10,7 +10,7 @@
 
   <div class="example-sidenav-content">
     <button type="button" mat-button (click)="drawer.toggle()">
-      Toggle sidenav
+      Menu
     </button>
     <div class="row">
       <div class="col-md-12">

@@ -1,23 +1,18 @@
 <div class="panel">
-  <div class="form-inline"> 
+  <div class="form-inline">
     <mat-form-field color="accent">
-        <input type="text" matInput
-        ngxDaterangepickerMd
-        [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}"
-        startKey="start"
-        endKey="end"
-        [(ngModel)]="selected"
-        name="daterange" /> 
-    </mat-form-field> 
-        <input  #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset" > 
+      <input type="text" matInput ngxDaterangepickerMd [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}" startKey="start" endKey="end"
+        [(ngModel)]="selected" name="daterange" />
+    </mat-form-field>
+    <input #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset">
     <div class="form-group">
       <div class="col-md-offset-2 col-md-8">
         <button class="btn btn-default" (click)="download()">Save csv</button>
       </div>
     </div>
   </div>
- <!--  <table class="table table-striped">
-    <thead>(ngModelChange)="choosedDate($event)"
+  <table class="table table-striped">
+    <thead>
       <tr>
         <th>time</th>
         <th>exchange</th>
@@ -49,5 +44,5 @@
         <th>{{order.reason}}</th>
       </tr>
     </tbody>
-  </table>
- -->
+    </table>
+</div>

@@ -25,7 +25,6 @@ export class UserComponent implements OnInit {
   updateDate() {
     const t = this.source.subscribe((x: any) => {
       this.fetchData();
-      console.log('x :', x);
     });
   }
 
@@ -33,7 +32,6 @@ export class UserComponent implements OnInit {
     this.userService.getData<ExchangeData[]>('sever-tcp/current-price')
       .subscribe(data => {
         this.items = data;
-        console.log('this.items  :', this.items);
       });
   }
 

@@ -1,8 +1,7 @@
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import { UserService } from './../../services/user.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Trade } from '../../shared/models/trade';
-import { MatDatepicker, MatDatepickerToggle } from '@angular/material';
 
 @Component({
   selector: 'app-trades',
@@ -30,9 +29,9 @@ export class TradesComponent implements OnInit {
   }
 
   async download() {
-    if (this.selected.start && this.selected.start) {
-      const utcStartDate = Date.parse(this.startDate);
-      const utcEndDate = Date.parse(this.endDate);
+    if (this.selected.start && this.selected.end) {
+      const utcStartDate = Date.parse(this.selected.start);
+      const utcEndDate = Date.parse(this.selected.end);
       console.log(utcStartDate, utcEndDate);
       await this.userService.getData<Trade[]>(`trades/find/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
       .subscribe(data => {

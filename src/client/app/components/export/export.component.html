@@ -1,19 +1,20 @@
 <div class="panel">
-    <div class="form-inline"> 
-      <mat-form-field color="accent">
-          <input type="text" matInput
-          ngxDaterangepickerMd
-          [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}"
-          startKey="start"
-          endKey="end"
-          [(ngModel)]="selected"
-          name="daterange" /> 
-      </mat-form-field> 
-          <input  #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset" > 
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-8">
-          <button class="btn btn-default" (click)="download()">Save csv</button>
-        </div>
-      </div>
-    </div>
-</div>
+  <div class="form-inline">
+    <mat-form-field color="accent">
+      <input type="text" matInput ngxDaterangepickerMd [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}" startKey="start" endKey="end"
+        [(ngModel)]="selected" name="daterange" />
+    </mat-form-field> 
+    <input #input maxlength="4" placeholder="Enter asset name (ETH)" [(ngModel)]="asset"/>
+    <span>
+      <button class="btn btn-default control" (click)="download()">Save csv</button>
+    </span>
+    <span>
+      <input type="number" #input maxlength="4" placeholder="Enter timestamp" [(ngModel)]="timestamp" />
+    </span>
+    <span>
+      <button class="btn btn-default control" (click)="getDataTimeStamp(timestamp)">Save timestamp data</button>
+    </span>
+    <span>
+      <button class="btn btn-default control" (click)="getPercentData(timestamp)">Save percent spread data </button>
+    </span>
+  </div>
