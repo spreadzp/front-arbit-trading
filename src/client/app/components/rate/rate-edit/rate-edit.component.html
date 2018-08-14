@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form>
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="name">Exchange Name</label>
+          <input #exchangeName type="text" id="exchangeName" class="form-control" />
+        </div>
+        <div class="col-sm-2 form-group">
+          <label for="takerFee">Taker Fee</label>
+          <input #takerFee type="number" id="takerFee" class="form-control" />
+        </div>
+        <div class="col-sm-2 form-group">
+          <label for="makerFee">Maker Fee</label>
+          <input #makerFee type="number" id="makerFee" class="form-control" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="button"
+            class="btn btn-success"
+            (click)="createRate()">Create</button>
+          <button type="button"
+            class="btn btn-primary"
+            (click)="clearFields()">Clear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

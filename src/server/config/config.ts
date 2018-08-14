@@ -31,7 +31,7 @@ const Config: IConfig = {
   development: {
     rootPath,
     db: 'mongodb://localhost:27017/orders-book',
-    httpPort: 3000,
+    httpPort: 3001,
     tcpPort: 8000,
     wsPort: 1338,
     jwtSecret,

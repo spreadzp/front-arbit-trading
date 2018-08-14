@@ -58,6 +58,32 @@ content-type: application/json
     "time": "1531474565317"
 }
 
+POST http://localhost:3001/rates/create HTTP/1.1
+content-type: application/json
+
+{ 
+   "exchangeName": "bitfinex", 
+   "makerFee": 0.2,
+   "takerFee": 0.1
+}
+
+POST http://localhost:3001/rates/save HTTP/1.1
+content-type: application/json
+
+{ 
+   "exchangeName": "bittrex", 
+   "makerFee": 0.25,
+   "takerFee": 0.1
+}
+
+POST http://localhost:3001/rates/delete HTTP/1.1
+content-type: application/json
+
+{ 
+   "exchangeName": "HitBtc", 
+   "makerFee": 0.25,
+   "takerFee": 0.1
+}
 
 GET http://localhost:8888/v1/wallet/EOS6z87aEYnSaLXt4GfgX4WRXM9g44zU7N84FFkxKJ1pByCc1AzX7
 

@@ -20,12 +20,12 @@ export class ShoppingListService {
     });
   }
 
-  public addIngredient(ingredient: Ingredient) {
+  public addIngredient(ingredient: Ingredient): void {
     this.ingredients.push(ingredient);
    // this.ingredientsChanged.emit(this.ingredients.slice());
   }
 
-  public removeIngredient(index: number) {
+  public removeIngredient(index: number): void {
     this.ingredients.splice(index, 1);
    // this.ingredientsChanged.emit(this.ingredients.slice());
   }

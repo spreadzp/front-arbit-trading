@@ -41,9 +41,9 @@ export class Parser {
 
     parseTcpMessage(data: any) {
         const exchangePair = data.payload.method.split(' ');
-        const orderBook = data.payload.params[0];
-        const host = data.payload.params[1];
-        const port = data.payload.params[2];
+        const orderBook = data.payload.params.quote;
+        const host = data.payload.params.host;
+        const port = data.payload.params.port;
         return { exchangePair, orderBook, host, port };
     }
 

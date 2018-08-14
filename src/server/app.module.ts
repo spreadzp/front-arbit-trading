@@ -3,6 +3,7 @@ import { TradeModule } from './modules/db/trade/trade.module';
 import { OrderModule } from './modules/db/order/order.module';
 import { ServerTcpModule } from './modules/server/server.module';
 import { OrderBookModule } from './modules/db/orderBook/orderBook.module';
+import {RateModule} from './modules/db/rate/rate.module';
 // nest
 import { Module } from '@nestjs/common';
 
@@ -23,6 +24,7 @@ import { SERVER_CONFIG } from './server.constants';
     DatabaseModule,
     AuthModule,
     UserModule,
+    RateModule,
     // GraphqlModule,
     AngularUniversalModule.forRoot()
   ],

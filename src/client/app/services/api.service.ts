@@ -21,7 +21,8 @@ export class ApiService {
     return this.request(url, RequestMethod.Get);
   }
 
-  post(url: string, body: Object): Observable<OrderBook> {
+  post(url: string, body: Object): Observable<any> {
+    console.log('url :', url, body);
     return this.request(url, RequestMethod.Post, body);
   }
 
@@ -29,8 +30,8 @@ export class ApiService {
     return this.request(url, RequestMethod.Put, body);
   }
 
-  delete(url: string): Observable<any> {
-    return this.request(url, RequestMethod.Delete);
+  delete(url: string, body: Object): Observable<any> {
+    return this.request(url, RequestMethod.Delete, body);
   }
 
   request(url: string, method: RequestMethod, body?: Object): Observable<any> {

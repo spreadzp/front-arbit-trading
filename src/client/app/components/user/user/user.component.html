@@ -22,7 +22,7 @@
         </div>
     </div>
     <table class="table table-striped">
-      <!--   <thead>
+       <thead>
             <tr>
                 <th>time</th>
                 <th>exchange</th>
@@ -39,7 +39,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of items">
-               <td>{{item.time}}</td>
+               <td>{{item.time | date: 'mediumTime'}}</td>
                 <td>{{item.exchange}}</td>
                 <td>{{item.pair}}</td>
                 <td>{{item.bids}}</td>
@@ -51,6 +51,6 @@
                 <td>{{item.host}}</td>
                 <td>{{item.port}}</td>
             </tr>
-        </tbody> -->
+        </tbody>
     </table>
 </div>

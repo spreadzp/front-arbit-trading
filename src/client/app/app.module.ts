@@ -39,6 +39,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import { RateComponent } from './components/rate/rate.component';
+import { RateEditComponent } from './components/rate/rate-edit/rate-edit.component';
 
 
 @NgModule({
@@ -61,6 +63,8 @@ import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
     ArbitrageComponent,
     ArbitrageEditComponent,
     SidenavComponent,
+    RateComponent,
+    RateEditComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -8,10 +8,11 @@ import { UserService } from './user.service';
 import { ApiService } from './api.service';
 import { ArbitrageService } from './arbitrage.service';
 import { ExchangeService } from './exchange.service';
+import { RateService } from './rate.service';
 
 @NgModule({
   imports: [HttpClientModule],
   providers: [AuthService, RecipesService, ShoppingListService,
-  UserService, ApiService, PersonValidatorService, ArbitrageService, ExchangeService]
+  UserService, ApiService, PersonValidatorService, ArbitrageService, ExchangeService, RateService]
 })
 export class ServicesModule {}

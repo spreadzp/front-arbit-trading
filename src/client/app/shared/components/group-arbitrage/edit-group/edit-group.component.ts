@@ -11,7 +11,6 @@ import { NgForm } from '@angular/forms';
 })
 export class EditGroupComponent {
   @ViewChild(GroupExchangeComponent) groupExchange: GroupExchangeComponent;
-  //@ViewChild('formEdit') formEdit: any;
   groupId = '';
   panelOpenState = false;
   nameExchange = '';
@@ -25,6 +24,7 @@ export class EditGroupComponent {
   [propName: string]: any;
 
   constructor(private readonly exchangeService: ExchangeService) { }
+
   setStatus(event: any) {
     const fieldName: string = event.srcElement.id;
     this[fieldName] = event.target.value;

@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-xs-10">
+    <app-rate-edit></app-rate-edit>
+    <hr>
+    <ul class="list-group">
+      <app-exchange
+        *ngFor="let rate of rates; let i = index;"
+        [rate]="rate"
+        (rateRemoved)="rateService.removeRate(rate)"
+      ></app-exchange>
+    </ul>
+  </div>
+</div>
