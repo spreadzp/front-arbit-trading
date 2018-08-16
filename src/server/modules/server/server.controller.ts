@@ -34,8 +34,7 @@ export class ServerTcpController {
 
     @Get('current-spread')
     currentSpread(@Res() res: any) {
-        const currentSpread = this.serverTcp.getSpread();
-        console.log('currentSpread :', currentSpread);
+        const currentSpread = this.serverTcp.getSpread(); 
         res.status(HttpStatus.OK).json(currentSpread);
     }
 }
