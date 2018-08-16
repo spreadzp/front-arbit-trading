@@ -21,6 +21,7 @@ export class Parser {
     stateTrading: StateTrading[] = [];
     forexLoader: ForexLoader;
     countHelper: CountHelper;
+    bidAskSpread: any = [];
 
     constructor(private readonly orderBooksService: OrderBookService) {
         this.forexLoader = new ForexLoader();
@@ -146,7 +147,6 @@ export class Parser {
 
     private fromUsdToFiatPrice(exchangePair: any, currentPrice: any) {
         const currentForexPair = this.getPriceFiatForex(exchangePair);
-        console.log('currentForexPair :', currentForexPair);
         if (currentForexPair && fiatPrices[currentForexPair]) {
             return (currentForexPair === 'USDJPY') ?
                 [[+currentPrice[0][0] * +fiatPrices[currentForexPair][0], 0]] :
@@ -193,7 +193,6 @@ export class Parser {
                     this.stateTrading[index].remainingSize -= +trade.size;
                 }
             });
-            console.log('@@@@subTradedVolume this.stateTrading :', this.stateTrading);
         }
 
     }
@@ -280,6 +279,35 @@ export class Parser {
         }));
     }
 
+    getBidAskSpread() {
+        const bidAskSpread = [];
+        const askBidSpread = [];
+        for (let i = 0; i < this.exchangeData.length; i++) {
+            for (let j = i + 1; j < this.exchangeData.length; j++) {
+                const currentExchangeBidAskSpread = {
+                    compareExchanges: `${this.exchangeData[i].exchange}-bid/${this.exchangeData[j].exchange}-ask`,
+                    pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
+                    spread: (this.exchangeData[i].bids[0][0] - this.exchangeData[j].asks[0][0]) / this.exchangeData[j].asks[0][0]
+                };
+                bidAskSpread.push(currentExchangeBidAskSpread);
+                const currentExchangeSpread = {
+                    compareExchanges: `${this.exchangeData[i].exchange}-ask/${this.exchangeData[j].exchange}-bid`,
+                    pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
+                    spread: (this.exchangeData[i].asks[0][0] - this.exchangeData[j].bids[0][0]) / this.exchangeData[j].bids[0][0]
+                };
+                askBidSpread.push(currentExchangeSpread);
+            }
+        }
+        bidAskSpread.sort((a, b) => {
+            return b.spread - a.spread;
+        });
+        askBidSpread.sort((a, b) => {
+            return b.spread - a.spread;
+        });
+
+        return { bidAsk: bidAskSpread, askBid: askBidSpread };
+    }
+
     getCurrentFiatPrice(): ExchangeData[] {
         return this.exchangeData.map(data => ({
             exchange: data.exchange, pair: data.pair, bids: this.fromUsdToFiatPrice(data.pair, data.bids), bidVolumes: data.bids[0][1],
@@ -354,7 +382,7 @@ export class Parser {
             statusOrder: 'formed'
         };
         partialOrder.push(order);
-        console.log('partialTrade=', partialTrade, 'oppositePartialOrder=', partialOrder);
+        //console.log('partialTrade=', partialTrade, 'oppositePartialOrder=', partialOrder);
         return partialOrder;
     }
 

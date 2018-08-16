@@ -36,6 +36,7 @@ export class ExchangeService {
         }
     ];
     percentTable = ['exchange', 'bid', 'ask'];
+    headerSpreadTable = ['spreadExchange', 'pair', 'spread'];
     headerTableNames = ['select', 'pair', 'exchange', 'memberOfExchange', 'tradeVolume', 'fee', 'deviation', 'serverName', 'status'];
     private exchanges: Exchange[] = [
         {

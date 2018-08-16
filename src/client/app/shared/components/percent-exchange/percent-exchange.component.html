@@ -1,21 +1,22 @@
-<mat-table  [dataSource]="dataSource" class="lessons-table mat-elevation-z8">
+
+<mat-table  [dataSource]="dataSourceBidAsk" class="lessons-table mat-elevation-z8">
    <!-- Checkbox Column -->
-   <ng-container matColumnDef="exchange">
-    <mat-header-cell *matHeaderCellDef>exchange</mat-header-cell>
-    <mat-cell *matCellDef="let item">{{item.exchange}}</mat-cell>
+   <ng-container matColumnDef="spreadExchange">
+    <mat-header-cell *matHeaderCellDef>spreadExchange</mat-header-cell>
+    <mat-cell *matCellDef="let item">{{item.compareExchanges}}</mat-cell>
 </ng-container>
 
-<ng-container matColumnDef="bid">
-    <mat-header-cell *matHeaderCellDef>bid</mat-header-cell>
+<ng-container matColumnDef="pair">
+    <mat-header-cell *matHeaderCellDef>pair</mat-header-cell>
     <mat-cell class="description-cell"
-              *matCellDef="let item">{{item.bids}}</mat-cell>
+              *matCellDef="let item">{{item.pair}}</mat-cell>
 
 </ng-container>
 
-<ng-container matColumnDef="ask">
-    <mat-header-cell *matHeaderCellDef>ask</mat-header-cell>
+<ng-container matColumnDef="spread">
+    <mat-header-cell *matHeaderCellDef>spread %</mat-header-cell>
     <mat-cell class="duration-cell"
-              *matCellDef="let item">{{item.asks}}</mat-cell>
+              *matCellDef="let item">{{item.spread * 100}}</mat-cell>
 </ng-container>
 
 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -23,3 +24,30 @@
 <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
 </mat-table>
+
+
+<mat-table  [dataSource]="dataSourceAskBid" class="lessons-table mat-elevation-z8">
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="spreadExchange">
+     <mat-header-cell *matHeaderCellDef>spreadExchange</mat-header-cell>
+     <mat-cell *matCellDef="let item">{{item.compareExchanges}}</mat-cell>
+ </ng-container>
+ 
+ <ng-container matColumnDef="pair">
+     <mat-header-cell *matHeaderCellDef>pair</mat-header-cell>
+     <mat-cell class="description-cell"
+               *matCellDef="let item">{{item.pair}}</mat-cell>
+ 
+ </ng-container>
+ 
+ <ng-container matColumnDef="spread">
+     <mat-header-cell *matHeaderCellDef>spread %</mat-header-cell>
+     <mat-cell class="duration-cell"
+               *matCellDef="let item">{{item.spread * 100}}</mat-cell>
+ </ng-container>
+ 
+ <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+ 
+ <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+ 
+ </mat-table>

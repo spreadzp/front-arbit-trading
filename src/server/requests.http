@@ -24,6 +24,7 @@ Get https://testnet.gateway.proximax.io/node/info
 Get https://mijinnet.gateway.proximax.io/node/info
 
 Get https://testnet3.gateway.proximax.io/node/info
+Get http://localhost:3001/sever-tcp/current-spread
 
 Get https://mainnet.gateway.proximax.io/node/info
 Get https://dev.gateway.proximax.io/node/info

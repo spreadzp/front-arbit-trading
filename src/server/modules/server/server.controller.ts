@@ -31,4 +31,11 @@ export class ServerTcpController {
         const currentPrice = this.serverTcp.getCurrentPrice();
         res.status(HttpStatus.OK).json(currentPrice);
     }
+
+    @Get('current-spread')
+    currentSpread(@Res() res: any) {
+        const currentSpread = this.serverTcp.getSpread();
+        console.log('currentSpread :', currentSpread);
+        res.status(HttpStatus.OK).json(currentSpread);
+    }
 }

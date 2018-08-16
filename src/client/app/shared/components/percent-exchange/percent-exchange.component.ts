@@ -1,11 +1,11 @@
-import { ExchangeData } from './../../models/exchangeData';
+import { ExchangeSpread } from './../../models/exchangeSpread';
 import { UserService } from './../../../services/user.service';
 import { interval } from 'rxjs';
 import { ExchangeService } from './../../../services/exchange.service';
 import { ArbitrageExchange } from './../../models/arbitrageExchange';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDatepicker, MatTableDataSource } from '@angular/material';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Pipe } from '@angular/core';
 
 @Component({
   selector: 'app-percent-exchange',
@@ -14,10 +14,12 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 })
 export class PercentExchangeComponent implements OnInit {
   displayedColumns: string[] = [];
-  tradeLines: ExchangeData[] = [];
-  dataSource: MatTableDataSource<ExchangeData>;
-  selection: SelectionModel<ExchangeData>;
-  source: any;
+  bidAskSpread: ExchangeSpread[] = [];
+  askBidSpread: ExchangeSpread[] = [];
+  dataSourceBidAsk: MatTableDataSource<ExchangeSpread>;
+  dataSourceAskBid: MatTableDataSource<ExchangeSpread>;
+  selection: SelectionModel<ExchangeSpread>;
+  source:  any;
 
   constructor(
     private readonly exchangeService: ExchangeService,
@@ -27,7 +29,7 @@ export class PercentExchangeComponent implements OnInit {
   ngOnInit() {
     this.getTradeLinesData();
     this.fetchData();
-    this.selection = new SelectionModel<ExchangeData>(true, []);
+    this.selection = new SelectionModel<ExchangeSpread>(true, []);
     this.isAllSelected();
     this.source = interval(1000);
     this.updateDate();
@@ -40,13 +42,15 @@ export class PercentExchangeComponent implements OnInit {
   }
 
   fetchData() {
-    this.userService.getData<ExchangeData[]>('sever-tcp/current-price')
+    this.userService.getData<{bidAsk: ExchangeSpread[], askBid: ExchangeSpread[]}>('sever-tcp/current-spread')
       .subscribe(data => {
-        this.tradeLines = data;
-        this.dataSource = new MatTableDataSource<ExchangeData>(this.tradeLines);
+        this.bidAskSpread = data.bidAsk;
+        this.askBidSpread = data.askBid;
+        this.dataSourceBidAsk = new MatTableDataSource<ExchangeSpread>(this.bidAskSpread);
+        this.dataSourceAskBid = new MatTableDataSource<ExchangeSpread>(this.askBidSpread);
         console.log('data :', data);
       });
-      this.exchangeService.getHeaderTableNames('percentTable')
+    this.exchangeService.getHeaderTableNames('headerSpreadTable')
       .subscribe((header) => {
         this.displayedColumns = header;
         console.log('this.displayedColumns :', this.displayedColumns);
@@ -55,26 +59,30 @@ export class PercentExchangeComponent implements OnInit {
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    if (this.dataSourceBidAsk) {
+      const numSelected = this.selection.selected.length;
+      console.log('this.dataSource :', this.dataSourceBidAsk);
+      const numRows = this.dataSourceBidAsk.data.length;
+      return numSelected === numRows;
+    }
+
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+      this.dataSourceBidAsk.data.forEach(row => this.selection.select(row));
   }
   getTradeLinesData() {
-  /*   this.exchangeService.getCurrrentTradeLines()
-      .subscribe(data => {
-        this.tradeLines = data;
-        this.dataSource = new MatTableDataSource<ExchangeData>(this.tradeLines);
-      });
-    this.exchangeService.getHeaderTable()
-      .subscribe((header) => {
-        this.displayedColumns = header;
-      }); */
+    /*   this.exchangeService.getCurrrentTradeLines()
+        .subscribe(data => {
+          this.tradeLines = data;
+          this.dataSource = new MatTableDataSource<ExchangeData>(this.tradeLines);
+        });
+      this.exchangeService.getHeaderTable()
+        .subscribe((header) => {
+          this.displayedColumns = header;
+        }); */
   }
 }

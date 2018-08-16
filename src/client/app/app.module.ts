@@ -1,6 +1,6 @@
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_ID, Inject, PLATFORM_ID, NgModule } from '@angular/core';
+import { APP_ID, Inject, PLATFORM_ID, NgModule, Pipe } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 

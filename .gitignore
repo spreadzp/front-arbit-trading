@@ -63,3 +63,4 @@ typings/
 /bin/
 .vscode/
 nohup.out
+.idea/
