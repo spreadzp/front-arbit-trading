@@ -13,6 +13,7 @@ async function bootstrap() {
   const express: any = e();
 
   if (process.env.NODE_ENV === 'production') {
+    console.log('!!!!!!!! :' );
     enableProdMode();
   }
 
