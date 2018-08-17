@@ -27,20 +27,16 @@ export class ExportComponent implements OnInit {
     this.timestamp = timestamp;
   }
 
-  getPercentData(timestamp: number) {
-    console.log('getPercentData timestamp :', timestamp);
-    this.timestamp = timestamp;
-  }
-
   async download() {
     if (this.selected.start && this.selected.start) {
       const utcStartDate = Date.parse(this.selected.start);
       const utcEndDate = Date.parse(this.selected.end);
+      console.log('object :', utcStartDate, '&', utcEndDate);
       await this.userService.getData<OrderBook[]>(
         `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.items = data;
-          console.log('this.timestamp :', this.timestamp);
+          console.log(' this.items: ',  this.items);
           const timeData = this.convertToTimeStamp(data, utcStartDate, utcEndDate, this.timestamp);
           this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString());
         });
@@ -49,7 +45,7 @@ export class ExportComponent implements OnInit {
     }
   }
 
-  convertToTimeStamp(data: any, startData: number, endData: number, timestamp: number): OrderBook[] {
+  convertToTimeStamp(data: any[], startData: number, endData: number, timestamp: number): OrderBook[] {
     const tempOrderBook: OrderBook[] = [];
     const orderBookIntoTimestamp: any[] = [];
     let stamp;

@@ -341,6 +341,7 @@ export class Parser {
         const partialStartOrder = this.stateTrading.find((currentTrade) => {
             return currentTrade.arbitrageId === partialTrade.arbitrageId && currentTrade.typeOrder === partialTrade.typeOrder;
         });
+        console.log('partialStartOrder  : ', partialStartOrder);
         let nextTrade: StateTrading;
         for (const trade of this.stateTrading) {
             if (trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder !== partialTrade.typeOrder
@@ -363,6 +364,7 @@ export class Parser {
                 nextTrade.typeOrder = partialTrade.typeOrder;
             }
         }
+        console.log('nextTrade :', nextTrade);
         const order = {
             pair: nextTrade.pair,
             exchange: nextTrade.exchange,
