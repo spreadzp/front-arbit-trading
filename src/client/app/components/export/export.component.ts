@@ -22,12 +22,11 @@ export class ExportComponent implements OnInit {
   ngOnInit() { }
 
   getDataTimeStamp(timestamp: number) {
-    console.log('timestamp :', timestamp);
-    this.download();
+    this.download('timestamp');
     this.timestamp = timestamp;
   }
 
-  async download() {
+  async download(textForNameFile?: string) {
     if (this.selected.start && this.selected.start) {
       const utcStartDate = Date.parse(this.selected.start);
       const utcEndDate = Date.parse(this.selected.end);
@@ -38,7 +37,7 @@ export class ExportComponent implements OnInit {
           this.items = data;
           console.log(' this.items: ',  this.items);
           const timeData = this.convertToTimeStamp(data, utcStartDate, utcEndDate, this.timestamp);
-          this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString());
+          this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
         });
     } else {
       alert('Введите даты поискового диапазона!');
@@ -157,7 +156,7 @@ export class ExportComponent implements OnInit {
     return convertData;
   }
 
-  createCsv(orderData: any, startDate: number, endDate: number, asset: string) {
+  createCsv(orderData: any, startDate: number, endDate: number, asset: string, nameFile?: string) {
     console.log('orderData :', orderData);
     const heders = this.getExchangeHeader(orderData);
     console.log('heders :', heders);
@@ -176,7 +175,8 @@ export class ExportComponent implements OnInit {
     const data = orderData.data;
     for (i = 0, j = data.length; i < j; i += chuckSize) {
       temparray = data.slice(i, i + chuckSize);
-      this.angular5Csv = new Angular5Csv(temparray, `${asset}_Orderbooks_${stDate}_${finishfDate}_length${i}`, options);
+      const fileName = (nameFile === undefined) ? 'orderbooks' : nameFile;
+      this.angular5Csv = new Angular5Csv(temparray, `${asset}_ ${fileName}_${stDate}_${finishfDate}_length${i}`, options);
     }
   }
 }
