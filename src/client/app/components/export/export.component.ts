@@ -35,9 +35,11 @@ export class ExportComponent implements OnInit {
         `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
         .subscribe(data => {
           this.items = data;
-          console.log(' this.items: ',  this.items);
-          const timeData = this.convertToTimeStamp(data, utcStartDate, utcEndDate, this.timestamp);
-          this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
+          console.log(' this.items: ', this.items);
+          if (this.items.length) {
+            const timeData = this.convertToTimeStamp(this.items, utcStartDate, utcEndDate, this.timestamp);
+            this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
+          }
         });
     } else {
       alert('Введите даты поискового диапазона!');
@@ -125,32 +127,35 @@ export class ExportComponent implements OnInit {
     }
 
     for (const name in exchangeNames) {
-      convertData.names.push(name);
+      if (exchangeNames.hasOwnProperty(name)) {
+        convertData.names.push(name);
+      }
     }
 
     const data = convertData.data;
     const needFiles = ['pair', 'bid', 'bidVolume', 'ask', 'askVolume'];
 
     for (const time in temp) {
+      if (temp.hasOwnProperty(time)) {
+        const last = [];
+        last.push(time);
 
-      const last = [];
-      last.push(time);
+        const timeline = temp[time];
 
-      const timeline = temp[time];
+        for (const name of convertData.names) {
 
-      for (const name of convertData.names) {
+          const orderBook: any = timeline[name];
 
-        const orderBook: any = timeline[name];
-
-        for (let i = 0; i < needFiles.length; ++i) {
-          if (orderBook) {
-            last.push(orderBook[needFiles[i]]);
-          } else {
-            last.push('');
+          for (let i = 0; i < needFiles.length; ++i) {
+            if (orderBook) {
+              last.push(orderBook[needFiles[i]]);
+            } else {
+              last.push('');
+            }
           }
         }
+        data.push(last);
       }
-      data.push(last);
     }
 
     return convertData;

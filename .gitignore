@@ -64,3 +64,4 @@ typings/
 .vscode/
 nohup.out
 .idea/
+test.js
