@@ -248,6 +248,7 @@ export class Parser {
             if (currentOrderBooks) {
                 for (const iterator of currentOrderBooks) {
                     if (iterator.bids !== 0 && iterator.asks !== 0) {
+                        console.log('iterator.exchange :', iterator.exchange);
                         const newOrderBookData: any = {
                             exchangeName: iterator.exchange, pair: iterator.pair,
                             bid: iterator.bids, bidVolume: iterator.bidVolumes, ask: iterator.asks,

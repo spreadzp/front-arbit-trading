@@ -1,16 +1,16 @@
-import {Order} from './../common/models/order';
+import { Order } from './../common/models/order';
 
 const net = require('toa-net');
-import {Parser} from './parser';
-import {OrderBookService} from './../db/orderBook/orderBook.service';
-import {OrderService} from './../db/order/order.service';
-import {IDataExchange} from './../common/models/dataExchange';
-import {Controller} from '@nestjs/common';
-import {ClientTcp} from './client-tcp';
-import {TradeService} from './../db/trade/trade.service';
-import {StateTrading} from './../common/models/stateTrading';
-import {ExchangeData} from './../common/models/exchangeData';
-import {SERVER_CONFIG} from './../../server.constants';
+import { Parser } from './parser';
+import { OrderBookService } from './../db/orderBook/orderBook.service';
+import { OrderService } from './../db/order/order.service';
+import { IDataExchange } from './../common/models/dataExchange';
+import { Controller } from '@nestjs/common';
+import { ClientTcp } from './client-tcp';
+import { TradeService } from './../db/trade/trade.service';
+import { StateTrading } from './../common/models/stateTrading';
+import { ExchangeData } from './../common/models/exchangeData';
+import { SERVER_CONFIG } from './../../server.constants';
 
 const auth = new net.Auth('secretxxx');
 
@@ -96,13 +96,13 @@ export class ServerTcpBot {
         else {
           const parsedMessage = this.parser.parseTcpMessage(message);
           this.parser.calculateAskBid(parsedMessage);
-          if (this.startFlag) {
-            const orders = this.parser.makeOrders();
-            if (orders) {
-              this.sendOrdersToBot(orders);
-              this.startFlag = false;
-            }
+          // if (this.startFlag) {
+          const orders = this.parser.makeOrders();
+          if (orders) {
+            this.sendOrdersToBot(orders);
+            this.startFlag = false;
           }
+          // }
         }
       });
     });
@@ -121,7 +121,7 @@ export class ServerTcpBot {
       .then((order) => {
         if (order) {
           const checkingOrder = {
-            nameOrder: 'checkOrder', order: {orderIdExchange: order.exchangeId, pairOrder: order.pair, type: order.typeOrder},
+            nameOrder: 'checkOrder', order: { orderIdExchange: order.exchangeId, pairOrder: order.pair, type: order.typeOrder },
             serverPort: order.port, host: order.host,
           };
           this.startClient(checkingOrder);
@@ -136,9 +136,9 @@ export class ServerTcpBot {
 
   createClient(clientSocket: any) {
     const newClientTcp = new net.Client();
-    this.clientsTcp.push({socket: clientSocket, client: newClientTcp});
+    this.clientsTcp.push({ socket: clientSocket, client: newClientTcp });
     newClientTcp.getSignature = () => {
-      return auth.sign({id: 'clientIdxxx'});
+      return auth.sign({ id: 'clientIdxxx' });
     };
     newClientTcp.connect(clientSocket);
     return newClientTcp;
