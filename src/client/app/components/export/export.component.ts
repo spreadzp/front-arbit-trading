@@ -37,7 +37,7 @@ export class ExportComponent implements OnInit {
           this.items = data;
           console.log(' this.items: ', this.items);
           if (this.items.length) {
-            const timeData = this.convertToTimeStamp(this.items, utcStartDate, utcEndDate, this.timestamp);
+            const timeData = this.convertToTimeStamp(this.items, this.timestamp);
             console.log('timeData :', timeData);
             const convertData = this.convertOneLine(timeData);
             this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
@@ -48,25 +48,25 @@ export class ExportComponent implements OnInit {
     }
   }
 
-  convertToTimeStamp(data: OrderBook[], startData: number, endData: number, timestamp: number): OrderBook[] {
+  convertToTimeStamp(data: OrderBook[], timestamp: number): OrderBook[] {
     const tempOrderBook: OrderBook[] = [];
     const orderBookIntoTimestamp: any[] = [];
     let stamp;
-    for (const iterator of data) { 
-      const index = orderBookIntoTimestamp.findIndex(item => item.exchangeName === iterator.exchangeName); 
+    for (const iterator of data) {
+      const index = orderBookIntoTimestamp.findIndex(item => item.exchangeName === iterator.exchangeName);
       if (index >= 0 && stamp > +iterator.time && orderBookIntoTimestamp.length) {
-        //console.log('stamp > +iterator.time :', stamp, +iterator.time);
         if (orderBookIntoTimestamp[index].pair === iterator.pair) {
-          orderBookIntoTimestamp[index].bid = (+iterator.bid > orderBookIntoTimestamp[index].bid)
-            ? iterator.bid : orderBookIntoTimestamp[index].bid;
+          orderBookIntoTimestamp[index].bid = (+iterator.bid > +orderBookIntoTimestamp[index].bid)
+            ? +iterator.bid : +orderBookIntoTimestamp[index].bid;
           orderBookIntoTimestamp[index].bidVolume = +iterator.bidVolume;
-          orderBookIntoTimestamp[index].ask = (orderBookIntoTimestamp[index].ask > +iterator.ask)
-            ? iterator.ask : orderBookIntoTimestamp[index].ask;
+          orderBookIntoTimestamp[index].ask = (+orderBookIntoTimestamp[index].ask > +iterator.ask)
+            ? +iterator.ask : +orderBookIntoTimestamp[index].ask;
           orderBookIntoTimestamp[index].askVolume = +iterator.askVolume;
           orderBookIntoTimestamp[index].time = stamp;
         }
       } else if (stamp <= +iterator.time) {
         for (const book of orderBookIntoTimestamp) {
+          console.log('tempOrderBook.push(book) :', book);
           tempOrderBook.push(book);
         }
         orderBookIntoTimestamp.length = 0;
@@ -76,10 +76,10 @@ export class ExportComponent implements OnInit {
         const newItem = {
           exchangeName: iterator.exchangeName,
           pair: iterator.pair,
-          bid: iterator.bid,
-          bidVolume: iterator.bidVolume,
-          ask: iterator.ask,
-          askVolume: iterator.askVolume,
+          bid: +iterator.bid,
+          bidVolume: +iterator.bidVolume,
+          ask: +iterator.ask,
+          askVolume: +iterator.askVolume,
           time: stamp
         };
         orderBookIntoTimestamp.push(newItem);
