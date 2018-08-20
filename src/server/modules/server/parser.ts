@@ -84,7 +84,7 @@ export class Parser {
                     bidVolumes: orderBook.bids[0][1],
                     asks: asksNewOrder,
                     askVolumes: orderBook.asks[0][1],
-                    currentStatus: 4,
+                    currentStatus: this.getCurrentPrice().length,
                     status: true,
                     spread: 0,
                     host: hostNewOrder,
@@ -103,7 +103,7 @@ export class Parser {
                     data.bidVolumes = orderBook.bids[0][1];
                     data.asks = asksNewOrder;
                     data.askVolumes = orderBook.asks[0][1];
-                    data.currentStatus = 4;
+                    data.currentStatus = this.getCurrentPrice().length;
                     data.host = hostNewOrder;
                     data.port = portNewOrder;
                     data.time = Date.now().toString();
@@ -125,7 +125,7 @@ export class Parser {
                     bidVolumes: orderBook.bids[0][1],
                     asks: asksNewOrder,
                     askVolumes: orderBook.asks[0][1],
-                    currentStatus: 4,
+                    currentStatus: this.getCurrentPrice().length,
                     spread: 0,
                     host: hostNewOrder,
                     port: portNewOrder,

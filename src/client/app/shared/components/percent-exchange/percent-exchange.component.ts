@@ -37,7 +37,6 @@ export class PercentExchangeComponent implements OnInit {
   updateDate() {
     const t = this.source.subscribe((x: any) => {
       this.fetchData();
-      console.log('x :', x);
     });
   }
 
@@ -48,12 +47,10 @@ export class PercentExchangeComponent implements OnInit {
         this.askBidSpread = data.askBid;
         this.dataSourceBidAsk = new MatTableDataSource<ExchangeSpread>(this.bidAskSpread);
         this.dataSourceAskBid = new MatTableDataSource<ExchangeSpread>(this.askBidSpread);
-        console.log('data :', data);
       });
     this.exchangeService.getHeaderTableNames('headerSpreadTable')
       .subscribe((header) => {
         this.displayedColumns = header;
-        console.log('this.displayedColumns :', this.displayedColumns);
       });
   }
 
@@ -61,7 +58,6 @@ export class PercentExchangeComponent implements OnInit {
   isAllSelected() {
     if (this.dataSourceBidAsk) {
       const numSelected = this.selection.selected.length;
-      console.log('this.dataSource :', this.dataSourceBidAsk);
       const numRows = this.dataSourceBidAsk.data.length;
       return numSelected === numRows;
     }
