@@ -38,7 +38,9 @@ export class ExportComponent implements OnInit {
           console.log(' this.items: ', this.items);
           if (this.items.length) {
             const timeData = this.convertToTimeStamp(this.items, utcStartDate, utcEndDate, this.timestamp);
-            this.createCsv(this.convertOneLine(timeData), utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
+            console.log('timeData :', timeData);
+            const convertData = this.convertOneLine(timeData);
+            this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
           }
         });
     } else {
@@ -46,20 +48,21 @@ export class ExportComponent implements OnInit {
     }
   }
 
-  convertToTimeStamp(data: any[], startData: number, endData: number, timestamp: number): OrderBook[] {
+  convertToTimeStamp(data: OrderBook[], startData: number, endData: number, timestamp: number): OrderBook[] {
     const tempOrderBook: OrderBook[] = [];
     const orderBookIntoTimestamp: any[] = [];
     let stamp;
-    for (const iterator of data) {
-      const index = orderBookIntoTimestamp.findIndex(item => item.exchangeName === iterator.exchangeName);
-      if (index >= 0 && stamp > +iterator.time) {
+    for (const iterator of data) { 
+      const index = orderBookIntoTimestamp.findIndex(item => item.exchangeName === iterator.exchangeName); 
+      if (index >= 0 && stamp > +iterator.time && orderBookIntoTimestamp.length) {
+        //console.log('stamp > +iterator.time :', stamp, +iterator.time);
         if (orderBookIntoTimestamp[index].pair === iterator.pair) {
-          orderBookIntoTimestamp[index].bid = (iterator.bid > orderBookIntoTimestamp[index].bid)
+          orderBookIntoTimestamp[index].bid = (+iterator.bid > orderBookIntoTimestamp[index].bid)
             ? iterator.bid : orderBookIntoTimestamp[index].bid;
-          orderBookIntoTimestamp[index].bidVolume = iterator.bidVolume;
-          orderBookIntoTimestamp[index].ask = (orderBookIntoTimestamp[index].ask > iterator.ask)
+          orderBookIntoTimestamp[index].bidVolume = +iterator.bidVolume;
+          orderBookIntoTimestamp[index].ask = (orderBookIntoTimestamp[index].ask > +iterator.ask)
             ? iterator.ask : orderBookIntoTimestamp[index].ask;
-          orderBookIntoTimestamp[index].askVolume = iterator.askVolume;
+          orderBookIntoTimestamp[index].askVolume = +iterator.askVolume;
           orderBookIntoTimestamp[index].time = stamp;
         }
       } else if (stamp <= +iterator.time) {

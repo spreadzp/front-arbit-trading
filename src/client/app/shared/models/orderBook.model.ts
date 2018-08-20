@@ -1,6 +1,5 @@
-import { Document } from 'mongoose';
 
-export class OrderBook extends Document {
+export interface OrderBook {
     readonly exchangeName: string;
     readonly pair: string;
     readonly bid: number;
