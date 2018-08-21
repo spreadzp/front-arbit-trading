@@ -1,4 +1,5 @@
 import { OrderBookService } from './../db/orderBook/orderBook.service';
+import { RateService } from './../db/rate/rate.service';
 import { ServerTcpBot } from './server-tcp';
 import { Controller, Get, Post, Body, Param, HttpStatus, Res } from '@nestjs/common';
 import { OrderService } from './../db/order/order.service';
@@ -12,8 +13,9 @@ export class ServerTcpController {
         private readonly orderBooksService: OrderBookService,
         private readonly orderService: OrderService,
         private readonly tradeService: TradeService,
+        private readonly rateService: RateService
     ) {
-        this.serverTcp = new ServerTcpBot(this.orderBooksService, this.orderService, this.tradeService );
+        this.serverTcp = new ServerTcpBot(this.orderBooksService, this.orderService, this.tradeService, this.rateService );
     }
 
     @Get('start-server')

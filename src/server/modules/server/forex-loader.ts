@@ -16,7 +16,7 @@ export class ForexLoader {
         });
     }
     fiatParser(data: any) {
-        let forexPrices: any[] = [];
+        const forexPrices: any[] = [];
         data = JSON.parse(data);
         for (const iterator in data) {
             forexPrices[data[iterator].symbol] = [data[iterator].bid,

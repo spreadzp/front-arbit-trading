@@ -22,7 +22,7 @@ export class ExportComponent implements OnInit {
   ngOnInit() { }
 
   getDataTimeStamp(timestamp: number) {
-    this.download('timestamp');
+    this.download(`timestamp_${timestamp}`);
     this.timestamp = timestamp;
   }
 
@@ -38,7 +38,6 @@ export class ExportComponent implements OnInit {
           console.log(' this.items: ', this.items);
           if (this.items.length) {
             const timeData = this.convertToTimeStamp(this.items, this.timestamp);
-            console.log('timeData :', timeData);
             const convertData = this.convertOneLine(timeData);
             this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
           }
@@ -66,7 +65,6 @@ export class ExportComponent implements OnInit {
         }
       } else if (stamp <= +iterator.time) {
         for (const book of orderBookIntoTimestamp) {
-          console.log('tempOrderBook.push(book) :', book);
           tempOrderBook.push(book);
         }
         orderBookIntoTimestamp.length = 0;

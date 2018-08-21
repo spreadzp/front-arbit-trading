@@ -21,5 +21,5 @@ export class RateComponent implements OnInit {
         console.log('data :', data);
         this.rates = data;
       });
-  } 
+  }
 }

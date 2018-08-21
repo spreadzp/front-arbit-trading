@@ -20,7 +20,7 @@ export class RateController {
   }
 
   @Post('save')
-  async saveNewRate(@Body() data: Rate)  {  
+  async saveNewRate(@Body() data: Rate)  {
     const rates = await this.rateService.addNewData(data);
   }
 

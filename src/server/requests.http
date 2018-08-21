@@ -30,6 +30,7 @@ Get https://mainnet.gateway.proximax.io/node/info
 Get https://dev.gateway.proximax.io/node/info
 
 Get http://localhost:3000/orders/all
+Get http://104.236.46.56:3001/orderBooks/order-books/?startDate=1534626000000&endDate=1534798799000&asset=BTC 
 Get http://localhost:3000/orders/find/?startDate=1534021200000&endDate=1534539599000
 Get http://localhost:3000/trades/find/?startDate=1531147708186&endDate=1531474565317
 Get http://localhost:3000/trades/all
@@ -77,14 +78,16 @@ content-type: application/json
    "takerFee": 0.1
 }
 
-POST http://localhost:3001/rates/delete HTTP/1.1
+POST http://localhost:3001/rates/save HTTP/1.1
 content-type: application/json
 
 { 
-   "exchangeName": "HitBtc", 
+   "exchangeName": "hitbtc", 
    "makerFee": 0.25,
    "takerFee": 0.1
 }
+
+Get http://localhost:3001/rates/all
 
 GET http://localhost:8888/v1/wallet/EOS6z87aEYnSaLXt4GfgX4WRXM9g44zU7N84FFkxKJ1pByCc1AzX7
 

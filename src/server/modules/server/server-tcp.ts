@@ -1,10 +1,10 @@
+import { RateService } from './../db/rate/rate.service';
 import { Order } from './../common/models/order';
 
 const net = require('toa-net');
 import { Parser } from './parser';
 import { OrderBookService } from './../db/orderBook/orderBook.service';
 import { OrderService } from './../db/order/order.service';
-import { IDataExchange } from './../common/models/dataExchange';
 import { Controller } from '@nestjs/common';
 import { ClientTcp } from './client-tcp';
 import { TradeService } from './../db/trade/trade.service';
@@ -25,25 +25,41 @@ export class ServerTcpBot {
   constructor(
     private readonly orderBooksService: OrderBookService,
     private readonly orderService: OrderService,
-    private readonly tradeService: TradeService) {
-    this.parser = new Parser(this.orderBooksService);
+    private readonly tradeService: TradeService,
+    private readonly rateService: RateService) {
+    this.parser = new Parser(this.orderBooksService, this.rateService);
   }
 
   passTradeToDB(message: any) {
     const trades = this.parser.parseTrades(message);
     if (trades) {
       for (const trade of trades) {
-        this.orderService.updateStatusOrder(trade.arbitrageId, trade.typeOrder, trade.exchOrderId, 'done', '');
+        const status = (trade.remainingSize === 0) ? 'done' : 'partial';
+        this.orderService.updateStatusOrder(trade.arbitrageId, trade.typeOrder, trade.exchOrderId, status, '');
         this.parser.subTradedVolume(trade);
         this.tradeService.addNewData(trade);
         let newOrder;
         if (this.parser.orderFullFilled(trade)) {
-          newOrder = this.parser.makeOrders();
+          const newOrderBook = this.parser.addNewOrderBookData();
+          newOrder = this.parser.defineSellBuy(newOrderBook);
         } else {
           newOrder = this.parser.makePartialOrder(trade);
         }
         if (newOrder) {
           this.sendOrdersToBot(newOrder);
+        }
+      }
+    }
+  }
+
+  generateOrderAfterCancel(message: any) {
+    const trades = this.parser.parseTrades(message);
+    if (trades) {
+      for (const trade of trades) {
+        this.orderService.updateStatusOrder(trade.arbitrageId, trade.typeOrder, trade.exchOrderId, 'cancelled', '');
+        const order: Order[] = this.parser.replaceCancelledOrderByNewOrder(trade);
+        if (order) {
+          this.sendOrdersToBot(order);
         }
       }
     }
@@ -68,7 +84,7 @@ export class ServerTcpBot {
         }
         if (message.type === 'notification' && message.payload.method === 'statusOrder') {
 
-          //console.log('status=', message.payload.params[3]);
+          console.log('status=', message.payload.params[3]);
           this.orderService.updateStatusOrder(message.payload.params[0], message.payload.params[1],
             message.payload.params[2], message.payload.params[3], message.payload.params[4]);
           if (message.payload.params[3] === 'open') {
@@ -80,29 +96,21 @@ export class ServerTcpBot {
           }
           if (message.payload.params[3] === 'done') {
             this.passTradeToDB(message);
-            const trade = {
-              exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
-              arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
-            };
           }
           if (message.payload.params[3] === 'cancelled') {
-            this.passTradeToDB(message);
-            const trade = {
-              exchange: '', pair: '', price: '', volume: '', typeOrder: message.payload.params[1],
-              arbitOrderId: message.payload.params[0], exchOrderId: '', time: ''
-            };
+            this.generateOrderAfterCancel(message);
           }
         }
         else {
           const parsedMessage = this.parser.parseTcpMessage(message);
           this.parser.calculateAskBid(parsedMessage);
-          // if (this.startFlag) {
-          const orders = this.parser.makeOrders();
-          if (orders) {
+          const newOrderBook = this.parser.addNewOrderBookData();
+          const orders = this.parser.defineSellBuy(newOrderBook);
+          if (orders && this.startFlag) {
+            console.log('this.startFlag :', this.startFlag);
             this.sendOrdersToBot(orders);
             this.startFlag = false;
           }
-          // }
         }
       });
     });
@@ -179,7 +187,6 @@ export class ServerTcpBot {
           }
           currentClient.reconnect();
         });
-        //console.log('order.nameOrder', order.nameOrder);
         const stringOrder = JSON.stringify(order.order);
         currentClient.notification(order.nameOrder, [`${stringOrder}`]);
       }
