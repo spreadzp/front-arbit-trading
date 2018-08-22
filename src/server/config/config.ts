@@ -40,7 +40,7 @@ const Config: IConfig = {
     wsProtocol: 'ws',
     forexApiKey: 'bfBuXo30skEAA0ES4Wz3lNQksUjcTuce',
     forexPairs: 'EURUSD,GBPUSD,USDJPY',
-    percentProfit: 1.5,
+    percentProfit: 0.1,
     deviationPrice: 0.1,
     tradeVolume: 1,
     fee: 0.01

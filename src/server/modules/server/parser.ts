@@ -404,7 +404,7 @@ export class Parser {
     makePartialOrder(partialTrade: any) {
         const partialOrder: any[] = [];
         let tradeVolume: number;
-        const orderType = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
+        // const orderType = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
         const partialStartOrder = this.stateTrading.find((currentTrade) => {
             return currentTrade.arbitrageId === partialTrade.arbitrageId && currentTrade.typeOrder === partialTrade.typeOrder;
         });
@@ -413,13 +413,13 @@ export class Parser {
         if (partialStartOrder) {
             for (const trade of this.stateTrading) {
                 if (trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder !== partialTrade.typeOrder
-                    && trade.remainingSize > 0) {
-                    tradeVolume = (partialStartOrder.origSize - partialStartOrder.remainingSize) - trade.remainingSize;
+                    && trade.remainingSize > partialStartOrder.remainingSize) {
+                    tradeVolume = (trade.remainingSize - partialStartOrder.remainingSize);
                     nextTrade = trade;
                     nextTrade.typeOrder = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
                 } else if (trade.arbitrageId === partialTrade.arbitrageId
                     && trade.typeOrder === partialStartOrder.typeOrder
-                    && partialStartOrder.remainingSize < trade.remainingSize) {
+                    && partialStartOrder.remainingSize <= trade.remainingSize) {
                     tradeVolume = trade.remainingSize - partialStartOrder.remainingSize;
                     nextTrade = trade;
                     nextTrade.typeOrder = partialTrade.typeOrder;
@@ -444,7 +444,7 @@ export class Parser {
                 size: tradeVolume,
                 origSize: nextTrade.volume,
                 remainingSize: nextTrade.remainingSize,
-                typeOrder: orderType,
+                typeOrder: nextTrade.typeOrder,
                 deviationPrice: +SERVER_CONFIG.deviationPrice,
                 fee: +SERVER_CONFIG.fee,
                 host: nextTrade.host,
@@ -471,6 +471,8 @@ export class Parser {
         let ordersBot: Order[];
         let maxBuyPrise: number;
         let minSellPrise: number;
+        let rateSeller: number;
+        let rateBuyer: number
         if (result) {
             maxBuyPrise = this.getMinAsk(result);
             minSellPrise = this.getMaxBid(result);
@@ -482,8 +484,12 @@ export class Parser {
             return data.asks === maxBuyPrise;
         });
         if (sellExchange && buyExchange) {
-            const rateSeller = this.rate.find(rate => rate.exchangeName === sellExchange.exchange).makerFee;
-            const rateBuyer = this.rate.find(rate => rate.exchangeName === buyExchange.exchange).makerFee;
+            const rateS = this.rate.find(rate => rate.exchangeName === sellExchange.exchange);
+            const rateB = this.rate.find(rate => rate.exchangeName === buyExchange.exchange);
+            if (rateS && rateB) {
+                rateSeller = rateS.makerFee;
+                rateBuyer =  rateB.makerFee;
+            }
             const marketSpread = (minSellPrise * (1 - rateSeller / 100) / maxBuyPrise * (1 + rateBuyer / 100) - 1) * 100;
             if (marketSpread > +SERVER_CONFIG.percentProfit) {
                 const buyForexPair: string = this.defineCurrentForexPair(buyExchange.pair);

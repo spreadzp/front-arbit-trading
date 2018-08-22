@@ -10,8 +10,6 @@ import { ExchangeData } from '../../../shared/models/exchangeData';
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  name: string;
-  price: string;
   items: ExchangeData[];
   req: any[];
   source: any;

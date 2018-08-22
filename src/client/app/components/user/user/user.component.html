@@ -1,56 +1,46 @@
 <div class="panel">
-    <div class="form-inline">
-        <div class="form-group">
-            <div class="col-md-8">
-                <input class="form-control" [(ngModel)]="name" placeholder="Модель" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-6">
-                <input type="number" class="form-control" [(ngModel)]="price" placeholder="Цена" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
-                <button class="btn btn-default" (click)="startTcp()">Запустить TCP</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
-                <button class="btn btn-default" (click)="stopTcp()">Остановить TCP</button>
-            </div>
-        </div>
+  <div class="form-inline">
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-8">
+        <button class="btn btn-default" (click)="startTcp()">Запустить TCP</button>
+      </div>
     </div>
-    <table class="table table-striped">
-       <thead>
-            <tr>
-                <th>time</th>
-                <th>exchange</th>
-                <th>pair</th>
-                <th>bid</th>
-                <th>bidVolume</th>
-                <th>ask</th>
-                <th>askVolume</th>
-                <th>spread %</th>
-                <th>status</th>
-                <th>host</th>
-                <th>port</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of items">
-               <td>{{item.time | date: 'mediumTime'}}</td>
-                <td>{{item.exchange}}</td>
-                <td>{{item.pair}}</td>
-                <td>{{item.bids}}</td>
-                <td>{{item.bidVolumes}}</td>
-                <td>{{item.asks}}</td>
-                <td>{{item.askVolumes}}</td>
-                <td>{{item.spread}}</td>
-                <td>{{item.status}}</td>
-                <td>{{item.host}}</td>
-                <td>{{item.port}}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="form-group">
+      <div class="col-md-offset-2 col-md-8">
+        <button class="btn btn-default" (click)="stopTcp()">Остановить TCP</button>
+      </div>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>time</th>
+        <th>exchange</th>
+        <th>pair</th>
+        <th>bid</th>
+        <th>bidVolume</th>
+        <th>ask</th>
+        <th>askVolume</th>
+        <th>spread %</th>
+        <th>status</th>
+        <th>host</th>
+        <th>port</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{item.time | date: 'mediumTime'}}</td>
+        <td>{{item.exchange}}</td>
+        <td>{{item.pair}}</td>
+        <td>{{item.bids}}</td>
+        <td>{{item.bidVolumes}}</td>
+        <td>{{item.asks}}</td>
+        <td>{{item.askVolumes}}</td>
+        <td>{{item.spread}}</td>
+        <td>{{item.status}}</td>
+        <td>{{item.host}}</td>
+        <td>{{item.port}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

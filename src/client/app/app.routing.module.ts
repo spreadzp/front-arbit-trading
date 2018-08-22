@@ -19,7 +19,7 @@ const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'recipes'
+    redirectTo: 'user'
   },
   {
     path: 'recipes',
