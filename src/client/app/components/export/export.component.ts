@@ -11,6 +11,7 @@ import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 export class ExportComponent implements OnInit {
   asset: any;
   timestamp: number;
+  skip = 0;
   startDate: any;
   endDate: any;
   angular5Csv: Angular5Csv;
@@ -27,21 +28,26 @@ export class ExportComponent implements OnInit {
   }
 
   async download(textForNameFile?: string) {
+
     if (this.selected.start && this.selected.start) {
       const utcStartDate = Date.parse(this.selected.start);
       const utcEndDate = Date.parse(this.selected.end);
       console.log('object :', utcStartDate, '&', utcEndDate);
+      for (let i = 0; i < 200; i++) {
+        this.skip = this.skip + 40000;
       await this.userService.getData<OrderBook[]>(
-        `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}`)
-        .subscribe(data => {
+        `orderBooks/order-books/?startDate=${utcStartDate}&endDate=${utcEndDate}&asset=${this.asset}&skip=${this.skip}`)
+        .subscribe(async data => {
           this.items = data;
-          console.log(' this.items: ', this.items);
-          if (this.items.length) {
-            const timeData = this.convertToTimeStamp(this.items, this.timestamp);
-            const convertData = this.convertOneLine(timeData);
-            this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
+            if (this.items.length > 100) {
+              const timeData = await this.convertToTimeStamp(this.items, this.timestamp);
+              const convertData = await this.convertOneLine(timeData);
+              console.log('convertData', convertData);
+              await this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
           }
+
         });
+      }
     } else {
       alert('Введите даты поискового диапазона!');
     }

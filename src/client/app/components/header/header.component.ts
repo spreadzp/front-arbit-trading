@@ -28,7 +28,8 @@ export class HeaderComponent implements OnInit {
       {title: 'Order', link: 'order'},
       {title: 'Rate', link: 'rate'},
       {title: 'Arbitrage', link: 'arbitrage'},
-      {title: 'Percent', link: 'percent'}
+      {title: 'Percent', link: 'percent'},
+      {title: 'Statistic', link: 'statistic'}
     ]
   };
 

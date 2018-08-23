@@ -26,7 +26,7 @@ export class OrderComponent implements OnInit {
 
     this.userService.getData<Order[]>(`orders/find/?startDate=${startOfDay}&endDate=${endOfDay}&asset=.*`)
       .subscribe(data => {
-        this.orders = data; 
+        this.orders = data;
       });
     console.log('this.orders :', this.orders);
   }
