@@ -42,7 +42,6 @@ export class ExportComponent implements OnInit {
             if (this.items.length > 100) {
               const timeData = await this.convertToTimeStamp(this.items, this.timestamp);
               const convertData = await this.convertOneLine(timeData);
-              console.log('convertData', convertData);
               await this.createCsv(convertData, utcStartDate, utcEndDate, this.asset.toString(), textForNameFile);
           }
 
@@ -169,9 +168,7 @@ export class ExportComponent implements OnInit {
   }
 
   createCsv(orderData: any, startDate: number, endDate: number, asset: string, nameFile?: string) {
-    console.log('orderData :', orderData);
     const heders = this.getExchangeHeader(orderData);
-    console.log('heders :', heders);
     const stDate = new Date(startDate).toDateString();
     const finishfDate = new Date(endDate).toDateString();
     const chuckSize = 40000;
