@@ -18,6 +18,7 @@ export class UserService {
   getData<T>(url: string) {
     return this.apiService.get<T>(url);
   }
+
   private extractUserData(response: Response) {
     console.log('response :', response);
   }

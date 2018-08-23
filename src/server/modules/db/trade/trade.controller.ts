@@ -25,6 +25,13 @@ export class TradeController {
         return trades;
     }
 
+    @Get('statistic/')
+    async getStatistic(@Request() req: any): Promise<any[]> {
+        const trades = await this.tradesService.getTradeStatisticByPeriod (
+            req.query.startDate, req.query.endDate, req.query.asset, req.query.typeOrder);
+        return trades;
+    }
+
     @Post('save')
     async saveNew(@Body() data: Trade) {
         const trade = await this.tradesService.addNewData(data);

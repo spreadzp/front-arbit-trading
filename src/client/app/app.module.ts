@@ -40,7 +40,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { RateComponent } from './components/rate/rate.component';
+import { StatisticComponent } from './components/statistic/statistic.component';
 import { RateEditComponent } from './components/rate/rate-edit/rate-edit.component';
+
 
 
 @NgModule({
@@ -64,7 +66,9 @@ import { RateEditComponent } from './components/rate/rate-edit/rate-edit.compone
     ArbitrageEditComponent,
     SidenavComponent,
     RateComponent,
+    StatisticComponent,
     RateEditComponent,
+    
   ],
   imports: [
     AppRoutingModule,
@@ -79,7 +83,7 @@ import { RateEditComponent } from './components/rate/rate-edit/rate-edit.compone
     GuardsModule,
     // GraphqlModule,
     //NativeScriptCommonModule,
-    InterceptorsModule,
+    //InterceptorsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,

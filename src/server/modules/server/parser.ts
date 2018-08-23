@@ -35,6 +35,7 @@ export class Parser {
 
     async getRates() {
         this.rate = await this.rateService.findAll();
+        console.log('rate :', this.rate);
     }
 
     getForexPrices() {
@@ -169,7 +170,7 @@ export class Parser {
         const currentOrderBooks = this.fetchOrderBook();
         let maxBuyPrise: number;
         let minSellPrise: number;
-        const orders: Order[] = [];
+        const orders: any[] = [];
 
         if (currentOrderBooks) {
             maxBuyPrise = this.getMinAsk(currentOrderBooks);
@@ -194,7 +195,7 @@ export class Parser {
                     pair: this.stateTrading[index].pair,
                     exchange: this.stateTrading[index].exchange,
                     price: this.getCurrentPriceExchange(this.stateTrading[index].exchange, this.stateTrading[index].pair,
-                         this.stateTrading[index].typeOrder),
+                        this.stateTrading[index].typeOrder),
                     volume: this.stateTrading[index].volume,
                     size: this.stateTrading[index].size,
                     origSize: this.stateTrading[index].origSize,
@@ -344,24 +345,27 @@ export class Parser {
         const askBidSpread = [];
         for (let i = 0; i < this.exchangeData.length; i++) {
             for (let j = i + 1; j < this.exchangeData.length; j++) {
-                const bidFeeExchange = this.rate.find(exchBid => exchBid.exchangeName === this.exchangeData[i].exchange).makerFee;
-                const askFeeExchange = this.rate.find(exchAsk => exchAsk.exchangeName === this.exchangeData[j].exchange).makerFee;
-                const coeffBidFee = 1 + bidFeeExchange / 100;
-                const coeffAskFee = 1 - askFeeExchange / 100;
-                const currentExchangeBidAskSpread = {
-                    compareExchanges: `${this.exchangeData[i].exchange}-bid/${this.exchangeData[j].exchange}-ask`,
-                    pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
-                    spread: (this.exchangeData[i].bids[0][0] * coeffBidFee - this.exchangeData[j].asks[0][0] * coeffAskFee)
-                        / this.exchangeData[j].asks[0][0] * coeffAskFee
-                };
-                bidAskSpread.push(currentExchangeBidAskSpread);
-                const currentExchangeSpread = {
-                    compareExchanges: `${this.exchangeData[i].exchange}-ask/${this.exchangeData[j].exchange}-bid`,
-                    pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
-                    spread: (this.exchangeData[i].asks[0][0] * coeffAskFee - this.exchangeData[j].bids[0][0] * coeffBidFee)
-                        / this.exchangeData[j].bids[0][0] * coeffBidFee
-                };
-                askBidSpread.push(currentExchangeSpread);
+                if (this.rate) {
+                    const bidFeeExchange = this.rate.find(exchBid => exchBid.exchangeName === this.exchangeData[i].exchange).makerFee;
+                    const askFeeExchange = this.rate.find(exchAsk => exchAsk.exchangeName === this.exchangeData[j].exchange).makerFee;
+                    const coeffBidFee = 1 + bidFeeExchange / 100;
+                    const coeffAskFee = 1 - askFeeExchange / 100;
+                    const currentExchangeBidAskSpread = {
+                        compareExchanges: `${this.exchangeData[i].exchange}-bid/${this.exchangeData[j].exchange}-ask`,
+                        pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
+                        spread: (this.exchangeData[i].bids[0][0] * coeffBidFee - this.exchangeData[j].asks[0][0] * coeffAskFee)
+                            / this.exchangeData[j].asks[0][0] * coeffAskFee
+                    };
+                    bidAskSpread.push(currentExchangeBidAskSpread);
+                    const currentExchangeSpread = {
+                        compareExchanges: `${this.exchangeData[i].exchange}-ask/${this.exchangeData[j].exchange}-bid`,
+                        pair: `${this.exchangeData[i].pair}/${this.exchangeData[j].pair}`,
+                        spread: (this.exchangeData[i].asks[0][0] * coeffAskFee - this.exchangeData[j].bids[0][0] * coeffBidFee)
+                            / this.exchangeData[j].bids[0][0] * coeffBidFee
+                    };
+                    askBidSpread.push(currentExchangeSpread);
+                }
+
             }
         }
         bidAskSpread.sort((a, b) => {
@@ -404,45 +408,38 @@ export class Parser {
     makePartialOrder(partialTrade: any) {
         const partialOrder: any[] = [];
         let tradeVolume: number;
-        // const orderType = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
+
         const partialStartOrder = this.stateTrading.find((currentTrade) => {
             return currentTrade.arbitrageId === partialTrade.arbitrageId && currentTrade.typeOrder === partialTrade.typeOrder;
         });
-        console.log('partialStartOrder  : ', partialStartOrder);
-        let nextTrade: StateTrading;
+
+        let nextTrade: any = {};
         if (partialStartOrder) {
             for (const trade of this.stateTrading) {
                 if (trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder !== partialTrade.typeOrder
-                    && trade.remainingSize > partialStartOrder.remainingSize) {
+                ) {
                     tradeVolume = (trade.remainingSize - partialStartOrder.remainingSize);
+                    nextTrade.exchange = trade.exchange;
                     nextTrade = trade;
+                    nextTrade.origSize = trade.origSize;
                     nextTrade.typeOrder = (partialTrade.typeOrder === 'sell') ? 'buy' : 'sell';
-                } else if (trade.arbitrageId === partialTrade.arbitrageId
-                    && trade.typeOrder === partialStartOrder.typeOrder
-                    && partialStartOrder.remainingSize <= trade.remainingSize) {
-                    tradeVolume = trade.remainingSize - partialStartOrder.remainingSize;
-                    nextTrade = trade;
-                    nextTrade.typeOrder = partialTrade.typeOrder;
-                }
-                else if (trade.remainingSize === partialStartOrder.remainingSize
-                    && trade.arbitrageId === partialTrade.arbitrageId && trade.typeOrder === partialTrade.typeOrder
-                    && partialStartOrder.remainingSize < 1 && partialStartOrder.remainingSize > 0) {
-                    nextTrade = partialStartOrder;
-                    tradeVolume = partialStartOrder.origSize - partialStartOrder.remainingSize;
-                    nextTrade.typeOrder = partialTrade.typeOrder;
+                    nextTrade.size = (
+                        (trade.remainingSize - partialStartOrder.remainingSize) > 0) ?
+                         trade.remainingSize - partialStartOrder.remainingSize :
+                         trade.remainingSize;
+                    nextTrade.remainingSize = trade.remainingSize;
                 }
             }
         }
 
-        console.log('nextTrade :', nextTrade);
-        if (nextTrade) {
+        if (nextTrade && nextTrade.size > 0) {
             const order = {
                 pair: nextTrade.pair,
                 exchange: nextTrade.exchange,
                 price: this.getCurrentPriceExchange(nextTrade.exchange, nextTrade.pair, nextTrade.typeOrder),
-                volume: tradeVolume,
-                size: tradeVolume,
-                origSize: nextTrade.volume,
+                volume: nextTrade.volume,
+                size: nextTrade.size,
+                origSize: nextTrade.origSize,
                 remainingSize: nextTrade.remainingSize,
                 typeOrder: nextTrade.typeOrder,
                 deviationPrice: +SERVER_CONFIG.deviationPrice,
@@ -454,10 +451,11 @@ export class Parser {
                 statusOrder: 'formed'
             };
             partialOrder.push(order);
+            return partialOrder;
+        } else {
+            const exchangeData = this.getCurrentFiatPrice();
+            return this.defineSellBuy(exchangeData);
         }
-
-        // console.log('partialTrade=', partialTrade, 'oppositePartialOrder=', partialOrder);
-        return partialOrder;
     }
 
     definePriceByForex(pair: string, price: number) {
@@ -472,7 +470,7 @@ export class Parser {
         let maxBuyPrise: number;
         let minSellPrise: number;
         let rateSeller: number;
-        let rateBuyer: number
+        let rateBuyer: number;
         if (result) {
             maxBuyPrise = this.getMinAsk(result);
             minSellPrise = this.getMaxBid(result);
@@ -488,7 +486,7 @@ export class Parser {
             const rateB = this.rate.find(rate => rate.exchangeName === buyExchange.exchange);
             if (rateS && rateB) {
                 rateSeller = rateS.makerFee;
-                rateBuyer =  rateB.makerFee;
+                rateBuyer = rateB.makerFee;
             }
             const marketSpread = (minSellPrise * (1 - rateSeller / 100) / maxBuyPrise * (1 + rateBuyer / 100) - 1) * 100;
             if (marketSpread > +SERVER_CONFIG.percentProfit) {
@@ -546,8 +544,9 @@ export class Parser {
             this.setStatusTrade(buyerOrder);
         }
         ordersBot.push(sellerOrder);
-        console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}
-              spread: ${marketSpread}%`);
+        //console.log('ordersBot :', ordersBot);
+        // console.log(`pair ${sellExchange.pair} sell: ${sellerOrder.exchange} ${sellerOrder.price}
+             // spread: ${marketSpread}%`);
         return ordersBot;
     }
 

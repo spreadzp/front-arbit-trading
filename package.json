@@ -126,6 +126,7 @@
     "ng2-datepicker": "^3.1.0",
     "ngx-daterangepicker-material": "^1.2.0",
     "node-emoji": "^1.8.1",
+    "npm-check-updates": "^2.14.2",
     "open-iconic": "^1.1.1",
     "passport": "0.4.0",
     "passport-facebook-token": "3.3.0",

@@ -7,12 +7,12 @@ export const bodyValidatorMiddleware: MiddlewareFunction =
   async (req: Request, res: Response, next: Function) => {
     const result = validate(req.body, authUserSchema);
 
-    if (result.error) {
+    /* if (result.error) {
       const errorMessage = result.error.details.shift().message;
       const message: string = errorMessage.replace(/["]/g, '');
 
       return next(new BadRequestException(`Validation failed: ${message}`));
-    }
+    } */
 
     next();
   };

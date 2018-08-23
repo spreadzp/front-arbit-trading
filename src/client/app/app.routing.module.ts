@@ -14,7 +14,7 @@ import { SettingComponent } from './components/setting/setting.component';
 import { ArbitrageComponent } from './components/arbitrage/arbitrage.component';
 import { PercentExchangeComponent } from './shared/components/percent-exchange/percent-exchange.component';
 import { RateComponent } from './components/rate/rate.component';
-
+import {StatisticComponent} from './components/statistic/statistic.component';
 const appRoutes: Routes = [
   {
     path: '',
@@ -81,8 +81,12 @@ const appRoutes: Routes = [
     component: PercentExchangeComponent,
   },
   {
+    path: 'statistic',
+    component: StatisticComponent,
+  },
+  {
     path: '**',
-    redirectTo: 'recipes'
+    redirectTo: 'user'
   }
 ];
 

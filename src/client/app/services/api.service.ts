@@ -16,6 +16,11 @@ export class ApiService {
   get<T>(url: string): Observable<T> {
     return this.request(url, RequestMethod.Get);
   }
+
+  getOrderBook() {
+
+  }
+
   getT(url: string): Observable<any> {
     console.log('url :', this.baseUrl + url);
     return this.request(url, RequestMethod.Get);
@@ -47,7 +52,6 @@ export class ApiService {
     if (body) {
       requestOptions.body = body;
     }
-
     const req = new Request(requestOptions);
     return this.http.request(req)
       .map((res: Response) => res.json())

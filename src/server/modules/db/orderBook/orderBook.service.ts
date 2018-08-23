@@ -22,9 +22,11 @@ export class OrderBookService {
     return await this.orderBookModel.find().exec();
   }
 
-  async getOrderBookByPeriod(startDate: number, endDate: number, asset: string) {
-    return await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}, pair: {$regex: asset, $options: 'm'}},
-    {_id: 0, exchangeName: 1, pair: 1, bid: 1, bidVolume: 1, ask: 1, askVolume: 1, time: 1}).exec();
+  async getOrderBookByPeriod(startDate: number, endDate: number, asset: string, skip: number) {
+    const response =  await this.orderBookModel.find({time: { $gte: startDate,  $lt: endDate}, pair: {$regex: asset, $options: 'm'}},
+    {_id: 0, exchangeName: 1, pair: 1, bid: 1, bidVolume: 1, ask: 1, askVolume: 1, time: 1}).skip(+skip).limit(40000) ;
+    console.log('response', response);
+    return response;
   }
   async getLastAsk(exchange: string, tradePair: string) {
     return await this.orderBookModel.findOne({exchangeName: exchange, pair: tradePair, time: {}},

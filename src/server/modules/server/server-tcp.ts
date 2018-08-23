@@ -30,11 +30,11 @@ export class ServerTcpBot {
     this.parser = new Parser(this.orderBooksService, this.rateService);
   }
 
-  passTradeToDB(message: any) {
+  passTradeToDB(message: any, status: string) {
     const trades = this.parser.parseTrades(message);
     if (trades) {
       for (const trade of trades) {
-        const status = (trade.remainingSize === 0) ? 'done' : 'partial';
+        // const status = (trade.remainingSize === 0) ? 'done' : 'partial';
         this.orderService.updateStatusOrder(trade.arbitrageId, trade.typeOrder, trade.exchOrderId, status, '');
         this.parser.subTradedVolume(trade);
         this.tradeService.addNewData(trade);
@@ -78,9 +78,10 @@ export class ServerTcpBot {
   startServer() {
     this.server = new net.Server((socket: any) => {
       socket.on('message', (message: any) => {
-        if (message.type === 'notification'
-          && message.payload.method === 'trades' || message.payload.method === 'partial' || message.payload.method === 'done') {
-          this.passTradeToDB(message);
+        if (message.type === 'notification' //  && message.payload.method === 'trades' ||
+          && message.payload.method === 'partial' || message.payload.method === 'done') {
+          console.log('message.payload.method :', message.payload.method);
+          this.passTradeToDB(message, message.payload.method);
         }
         if (message.type === 'notification' && message.payload.method === 'statusOrder') {
 
@@ -95,7 +96,7 @@ export class ServerTcpBot {
             this.checkOrder(trade);
           }
           if (message.payload.params[3] === 'done') {
-            this.passTradeToDB(message);
+            this.passTradeToDB(message, message.payload.params[3]);
           }
           if (message.payload.params[3] === 'cancelled') {
             this.generateOrderAfterCancel(message);
@@ -105,11 +106,13 @@ export class ServerTcpBot {
           const parsedMessage = this.parser.parseTcpMessage(message);
           this.parser.calculateAskBid(parsedMessage);
           const newOrderBook = this.parser.addNewOrderBookData();
-          const orders = this.parser.defineSellBuy(newOrderBook);
-          if (orders && this.startFlag) {
-            console.log('this.startFlag :', this.startFlag);
-            this.sendOrdersToBot(orders);
-            this.startFlag = false;
+          if (this.startFlag) {
+            const orders = this.parser.defineSellBuy(newOrderBook);
+            if (orders) {
+              console.log('this.startFlag :', this.startFlag);
+              this.sendOrdersToBot(orders);
+              this.startFlag = false;
+            }
           }
         }
       });
@@ -188,6 +191,7 @@ export class ServerTcpBot {
           currentClient.reconnect();
         });
         const stringOrder = JSON.stringify(order.order);
+        console.log('stringOrderstringOrder :', stringOrder);
         currentClient.notification(order.nameOrder, [`${stringOrder}`]);
       }
     } catch (e) {
