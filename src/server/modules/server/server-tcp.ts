@@ -170,7 +170,6 @@ export class ServerTcpBot {
         if (parametersOrder.order.price > 0) {
           this.startClient(parametersOrder);
           this.orderService.addNewOrder(currentOrder);
-          // this.parser.setStatusTrade(currentOrder);
         }
       }
     }
@@ -191,7 +190,6 @@ export class ServerTcpBot {
           currentClient.reconnect();
         });
         const stringOrder = JSON.stringify(order.order);
-        console.log('stringOrderstringOrder :', stringOrder);
         currentClient.notification(order.nameOrder, [`${stringOrder}`]);
       }
     } catch (e) {

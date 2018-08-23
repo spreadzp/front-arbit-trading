@@ -35,7 +35,6 @@ export class Parser {
 
     async getRates() {
         this.rate = await this.rateService.findAll();
-        console.log('rate :', this.rate);
     }
 
     getForexPrices() {
