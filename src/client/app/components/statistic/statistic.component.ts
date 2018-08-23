@@ -32,7 +32,7 @@ export class StatisticComponent implements OnInit {
   fetchData() {
     const interval24 = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
     const startOfDay = Math.floor(Date.now() / interval24) * interval24;
-    const endOfDay = Date.now(); //let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
+    const endOfDay = Date.now(); // let endOfDay = startOfDay + interval - 1; // 23:59:59:9999
     this.userService.getData<any[]>(`trades/statistic/?startDate=${startOfDay}&endDate=${endOfDay}&asset=${this.asset}&typeOrder=sell`)
       .subscribe(data => {
         if (data.length) {
@@ -42,7 +42,7 @@ export class StatisticComponent implements OnInit {
     this.userService.getData<any[]>(`trades/statistic/?startDate=${startOfDay}&endDate=${endOfDay}&asset=${this.asset}&typeOrder=buy`)
       .subscribe(data => {
         if (data.length) {
-          this.buyCount = +data[0].total; 
+          this.buyCount = +data[0].total;
         }
       });
   }
